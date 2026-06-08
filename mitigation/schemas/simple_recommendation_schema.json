@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SafeGEO Simple Recommendation Output",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["ranked_candidate_ids", "top_recommendations", "answer", "citations"],
+  "properties": {
+    "ranked_candidate_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "top_recommendations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "maxItems": 5
+    },
+    "answer": {"type": "string"},
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["doc_id", "line_ids"],
+        "properties": {
+          "candidate_id": {"type": "string"},
+          "doc_id": {"type": "string"},
+          "line_ids": {
+            "type": "array",
+            "items": {"type": "integer"}
+          },
+          "claim": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+runs/
+/tmp_*/
+.DS_Store
+
+# Local tooling / secrets — never publish
+deepseek.txt
+.agents/
+.codex/
+.playwright-mcp/

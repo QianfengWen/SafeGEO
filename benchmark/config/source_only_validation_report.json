@@ -1,0 +1,55 @@
+{
+  "visible_rows": 40800,
+  "label_rows": 40800,
+  "vertical_counts": {
+    "ai_meeting_transcription": 6800,
+    "baby_monitor": 6800,
+    "carry_on_backpack": 6800,
+    "home_air_purifier": 6800,
+    "noise_canceling_headphones": 6800,
+    "office_chair": 6800
+  },
+  "visible_leakage_checks": {
+    "ai_meeting_transcription": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    },
+    "baby_monitor": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    },
+    "carry_on_backpack": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    },
+    "home_air_purifier": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    },
+    "noise_canceling_headphones": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    },
+    "office_chair": {
+      "explicit_requirement_terms_in_query_rows": 0,
+      "removed_scaffolding_field_occurrences": 0
+    }
+  },
+  "avg_sources": {
+    "ai_meeting_transcription": 22.0,
+    "baby_monitor": 22.0,
+    "carry_on_backpack": 22.0,
+    "home_air_purifier": 22.0,
+    "noise_canceling_headphones": 22.0,
+    "office_chair": 22.0
+  },
+  "avg_lines_per_source": {
+    "ai_meeting_transcription": 11.504385026737967,
+    "baby_monitor": 11.50918449197861,
+    "carry_on_backpack": 11.501176470588236,
+    "home_air_purifier": 11.503870320855615,
+    "noise_canceling_headphones": 11.507199197860963,
+    "office_chair": 11.507078877005348
+  },
+  "row_count_match": true
+}
