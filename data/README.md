@@ -1,7 +1,8 @@
 ---
 license: cc-by-4.0
-task_categories: [text-ranking]
-tags: [generative-engine-optimization, recommendation, llm-safety, adversarial]
+task_categories: [text-ranking, text-retrieval]
+language: [en]
+tags: [generative-engine-optimization, geo, recommendation, recommendation-agents, llm-safety, adversarial, red-teaming, retrieval-augmented-generation, agents, benchmark]
 pretty_name: SafeGEO
 size_categories: [100K<n<1M]
 configs:
