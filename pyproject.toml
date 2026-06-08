@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "safegeo"
+version = "1.0.0"
+description = "SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents"
+requires-python = ">=3.10"
+dependencies = ["pyarrow>=14", "numpy>=1.24", "openai>=1.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

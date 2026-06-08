@@ -1,0 +1,1 @@
+"""SafeGEO shared library."""

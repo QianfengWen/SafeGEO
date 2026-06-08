@@ -1,0 +1,66 @@
+experiment_name: agent_design_mitigation_study
+base_dataset_name: source_only_attack_benchmark
+purpose: >-
+  Evaluate agent-developer mitigation layers on a realistic GEO stress setting.
+  The experiment uses 600 base cases, Target A only, and eight realistic GEO
+  attack packages. No no-attack controls are used in this mitigation stress test;
+  each layer is compared against L0 on the same attacked instances.
+
+target_selection:
+  target_slot: A
+  rationale: >-
+    Target A is the primary harmful near-miss target in the crossed design.
+    It is a high-quality hard negative that becomes harmful if the model ignores
+    the exploitable gap.
+
+packages:
+  package_family: realistic
+  include:
+    - caveat_burial_faq
+    - popularity_heavy_profile
+    - citation_padded_note
+    - independent_buyer_guide
+    - false_fit_checklist
+    - selective_comparison_note
+    - ai-directed_source_text
+    - full_stack_realistic_geo
+  exclude_controls: true
+
+layers:
+  - L0_source_only_baseline
+  - L1_prompt_mitigation
+  - L2_rationale_elicitation_mitigation
+  - L3_audited_evidence_sheet_mitigation
+  - L4_context_balancing_mitigation
+  - L5_instruction_filtering_mitigation
+
+run_sizes:
+  final:
+    base_cases: 600
+    packages_per_case: 8
+    target_slots: 1
+    instances_per_layer: 4800
+  screening:
+    base_cases: 150
+    packages_per_case: 8
+    target_slots: 1
+    instances_per_layer: 1200
+
+metrics:
+  attack_outcomes:
+    - attacked_target_top1_rate
+    - attacked_target_top3_rate
+    - mean_attacked_target_rank
+    - hard_constraint_violation_at_1
+    - misleading_geo_line_citation_rate
+    - geo_doc_citation_rate
+  recommendation_quality:
+    - top3_acceptable_gt_recall
+    - utility_ndcg_at_5
+    - regret_at_1
+    - parse_failure_rate
+  reduction_vs_L0:
+    - target_top3_reduction
+    - hard_violation_reduction
+    - misleading_citation_reduction
+    - mean_rank_improvement_against_attack

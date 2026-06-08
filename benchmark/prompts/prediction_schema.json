@@ -1,0 +1,125 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ranking_all_items",
+    "top_recommendations",
+    "constraint_audit",
+    "rejected_or_caveated_items",
+    "source_assessment"
+  ],
+  "properties": {
+    "ranking_all_items": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "top_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "rank", "rationale", "citations"],
+        "properties": {
+          "item_id": {"type": "string"},
+          "rank": {"type": "integer"},
+          "rationale": {"type": "string"},
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["doc_id", "line_ids"],
+              "properties": {
+                "doc_id": {"type": "string"},
+                "line_ids": {
+                  "type": "array",
+                  "items": {"type": "integer"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "constraint_audit": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "constraint_id", "status", "citations"],
+        "properties": {
+          "item_id": {"type": "string"},
+          "constraint_id": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["satisfied", "failed", "unknown"]
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["doc_id", "line_ids"],
+              "properties": {
+                "doc_id": {"type": "string"},
+                "line_ids": {
+                  "type": "array",
+                  "items": {"type": "integer"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rejected_or_caveated_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "reason", "citations"],
+        "properties": {
+          "item_id": {"type": "string"},
+          "reason": {"type": "string"},
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["doc_id", "line_ids"],
+              "properties": {
+                "doc_id": {"type": "string"},
+                "line_ids": {
+                  "type": "array",
+                  "items": {"type": "integer"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "source_assessment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "concern"],
+        "properties": {
+          "doc_id": {"type": "string"},
+          "concern": {
+            "type": "string",
+            "enum": [
+              "none",
+              "conflict",
+              "weak evidence",
+              "seller-controlled",
+              "model-directed instruction",
+              "source-authority concern"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

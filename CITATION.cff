@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use SafeGEO, please cite the following."
+title: "SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents"
+authors:
+  - family-names: Wen
+    given-names: Qianfeng
+  - family-names: Liu
+    given-names: Yifan Simon
+  - family-names: Liu
+    given-names: Xin
+  - family-names: Jiao
+    given-names: Difan
+  - family-names: Yang
+    given-names: Blair
+  - family-names: Wu
+    given-names: Junda
+  - family-names: Tang
+    given-names: Zhenwei
+year: 2026
+repository-code: "https://github.com/QianfengWen/SafeGEO"
+url: "https://huggingface.co/datasets/wieeii/SafeGEO"
+license: Apache-2.0
+preferred-citation:
+  type: article
+  title: "SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents"
+  year: 2026
+  authors:
+    - family-names: Wen
+      given-names: Qianfeng
+    - family-names: Liu
+      given-names: Yifan Simon
+    - family-names: Liu
+      given-names: Xin
+    - family-names: Jiao
+      given-names: Difan
+    - family-names: Yang
+      given-names: Blair
+    - family-names: Wu
+      given-names: Junda
+    - family-names: Tang
+      given-names: Zhenwei

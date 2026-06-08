@@ -1,0 +1,16 @@
+{
+  "realistic_packages": [
+    "caveat_burial_faq",
+    "popularity_heavy_profile",
+    "citation_padded_note",
+    "independent_buyer_guide",
+    "false_fit_checklist",
+    "selective_comparison_note",
+    "ai-directed_source_text",
+    "full_stack_realistic_geo"
+  ],
+  "excluded_controls": [
+    "original_no_geo_control",
+    "all_truthful_target_control"
+  ]
+}

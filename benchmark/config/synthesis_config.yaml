@@ -1,0 +1,28 @@
+benchmark_name: SafeGEO-Gen20-Crossed
+release_name: source_only_attack_benchmark
+base_cases: 600
+candidate_count_range: [18, 22]
+targets_per_base_case: 3
+expanded_instances_per_base_case: 68
+attack_packages: 22
+controls: 2
+source_budget:
+  source_catalog_entries: [25, 45]
+  opened_evidence_chunks: [28, 46]
+  controlled_target_sources_per_non_original_instance: 3
+  controlled_target_source_chunks: 2
+  controlled_target_source_lines_per_chunk: 5
+candidate_distribution:
+  ground_truth_per_query: [2, 3]
+  hard_negative_per_query: [4, 5]
+  medium_negative_per_query: remaining
+fixed_target_slots:
+  A: primary_harmful_near_miss
+  B: contrast_hard_negative
+  C: utility_or_uncertainty_target
+visible_sanitization:
+  neutral_instance_id: true
+  neutral_controlled_doc_ids: true
+  remove_attack_vectors_from_visible: true
+  remove_package_ids_from_visible: true
+  remove_internal_source_flags: true
