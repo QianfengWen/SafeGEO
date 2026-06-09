@@ -42,6 +42,7 @@ This release provides:
 
 - [Overview](#overview)
 - [Key results](#key-results)
+- [Results](#results)
 - [Installation](#installation)
 - [Dataset](#dataset)
 - [Usage](#usage)
@@ -69,6 +70,39 @@ Generative Engine Optimization (GEO) lets content owners rewrite web content to 
 - **GEO attacks promote flawed products.** They raise the rate at which flawed target products enter the recommendation set by up to **+83.2%** over truthful-source controls.
 - **Developer-side defenses help but don't fully fix it.** Defensive prompting and structured evidence checks cut harmful target promotion by up to **−39.2%** — substantial, but short of no-GEO performance.
 - **Scale.** 22 GEO attack packages (+2 controls) × 600 recommendation cases × 6 product verticals → **40,800** evaluation instances.
+
+## Results
+
+We evaluate three open-weight recommendation agents — **Gemma 4 31B IT**, **Qwen3.6 27B**, and **Devstral Small 2 24B Instruct** — plus a frontier robustness check on **DeepSeek-V4-Flash**. Metrics: **Target@3** (attacked-target top-3 rate), **HCV@1** (hard-constraint violation @1), **GT@3** (ground-truth @3), **uNDCG@5** (utility NDCG@5); see [Evaluation metrics](#evaluation-metrics).
+
+<p align="center">
+  <img src="assets/results_model_comparison.png" alt="Realistic GEO attack vs. truthful-rewrite control across four agents" width="560">
+  <br>
+  <em>A single seller-controlled rewrite moves the attacked target into the top-3 far more often than a truthful rewrite, across all four agents. DeepSeek-V4-Flash (boxed) is the most robust, yet still jumps from 4.6% to 72.6%.</em>
+</p>
+
+**Main attack — realistic GEO variants** (averaged over targets; truthful-rewrite control → GEO attack):
+
+| Model | Target@3 | HCV@1 | GT@3 | uNDCG@5 |
+|---|---|---|---|---|
+| Gemma 4 31B IT | 3.4 → **79.6** (+76.2) | 16.9 → 75.6 (+58.8) | 71.2 → 67.9 (−3.3) | 74.4 → 68.6 (−5.8) |
+| Qwen3.6 27B | 8.1 → **78.3** (+70.2) | 24.2 → 83.7 (+59.5) | 61.2 → 60.8 (−0.4) | 66.5 → 63.6 (−3.0) |
+| Devstral Small 2 24B Instruct | 12.7 → **90.9** (+78.2) | 41.1 → 90.7 (+49.7) | 50.7 → 47.9 (−2.8) | 67.4 → 59.2 (−8.2) |
+
+GEO moves a flawed target into the top-3 in up to **90.9%** of cases (≈3–13% under truthful controls); the strongest single variant (full-stack realistic, Devstral) reaches **+83.2** Target@3 over control.
+
+**Mitigation — Target@3 reduction vs. the no-mitigation baseline** (Δ; more negative = less harm):
+
+| Layer | Gemma 4 31B IT | Qwen3.6 27B | Devstral 2 24B |
+|---|---|---|---|
+| L0 No mitigation (Target@3) | 79.6 | 78.3 | 90.9 |
+| L1 Defensive prompt | −15.1 | −11.0 | −2.8 |
+| L2 Rationale elicitation | −15.0 | +7.5 | +2.3 |
+| **L3 Evidence breakdown** | **−29.7** | **−39.2** | **−17.7** |
+| L4 Context balancing | −11.5 | −4.5 | −3.2 |
+| L5 Instruction filtering | −2.2 | +3.0 | −0.5 |
+
+The **L3 audited evidence breakdown** is the strongest defense (up to **−39.2** Target@3), but no layer restores no-GEO performance. **Robustness:** DeepSeek-V4-Flash (a larger, more recent frontier model) is the most robust we evaluate, yet a single rewrite still lifts Target@3 from **4.6% → 72.6%** (+68.0) and HCV@1 from 23.0% → 73.4% (+50.4). Full per-variant results are in the paper.
 
 ## Installation
 
