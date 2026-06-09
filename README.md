@@ -15,6 +15,10 @@ Qianfeng Wen<sup>1,5,\*</sup>, Yifan Simon Liu<sup>2,\*</sup>, Xin Liu<sup>3,5,\
 
 </div>
 
+<p align="center">
+  <img src="assets/construction.png" alt="SafeGEO benchmark construction and evaluation pipeline" width="100%">
+</p>
+
 SafeGEO tests whether recommendation agents keep their utility-aligned recommendations when sellers rewrite web sources using Generative Engine Optimization (GEO). It also includes an agent-side mitigation study of practical developer defenses.
 
 Project page: <https://qianfengwen.github.io/SafeGEO/> &nbsp;·&nbsp; Dataset: <https://huggingface.co/datasets/wieeii/SafeGEO>
@@ -51,7 +55,11 @@ This release contains:
 
 Generative Engine Optimization (GEO) lets content owners rewrite web content to increase their visibility in generative systems. In recommendation agents, this creates a risk that seller-controlled sources make flawed products appear better supported than they are. We study this risk by asking whether recommendation agents preserve utility-aligned decisions when seller-controlled sources are rewritten for GEO. To make this question measurable, we construct SafeGEO, an evaluation suite with 22 GEO attack variants across 600 recommendation cases. We empirically show that GEO attacks can promote flawed target products. On average, they increase the rate at which such flawed products enter the recommendation set by up to 83.2%. We further study whether agent-side design choices can mitigate this risk and show that simple defenses, including defensive prompting and structured evidence checks, reduce harmful target promotion by up to 39.2%. These gains are substantial but do not restore the no-GEO performance, showing that GEO remains a serious risk despite developer-side mitigation.
 
-Figures and an interactive walkthrough are on the [project page](https://qianfengwen.github.io/SafeGEO/).
+<p align="center">
+  <img src="assets/teaser.png" alt="How GEO attacks manipulate recommendation agents" width="640">
+</p>
+
+The result figures and a fuller walkthrough are on the [project page](https://qianfengwen.github.io/SafeGEO/).
 
 ## Key results
 
