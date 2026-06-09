@@ -197,7 +197,7 @@ SafeGEO models GEO as an adversary that rewrites seller-controlled sources along
 | `S` | salience manipulation | model-facing |
 | `M` | model-directed instruction | model-facing |
 
-Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic (deployable GEO pages, the focus of the mitigation study). Each package is applied to one of three target slots: A (primary harmful near-miss, used in the mitigation study), B (contrast hard negative), and C (utility or uncertainty target). Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
+Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic (deployable GEO pages, the focus of the mitigation study). For each base case, three candidate items are randomly sampled from the candidate roster as GEO targets (slots A, B, C). Each is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. The mitigation study uses slot A. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
 
 ## Mitigation study
 

@@ -131,12 +131,16 @@ the ten controlled lines; those filler lines do not carry attack primitives.
 
 ## Target Slots
 
-Each base case fixes three candidate products as attack targets. A package is applied to one
-slot at a time, so the same package is evaluated against each of the three roles.
+For each base case, three candidate items are randomly sampled from the candidate roster as GEO
+targets, labelled slots A, B, and C. A package is applied to one slot at a time, so the same
+package is evaluated against each of the three sampled targets, and in every instance only that
+target's source is rewritten while the others stay truthful. The mitigation study uses slot A.
+The sampled targets are grouped by evidence stratum, used for the target-stratified analysis in
+the paper:
 
-| Slot | Role | Meaning |
+| Slot | Evidence stratum | Meaning |
 |---|---|---|
-| A | `primary_harmful_near_miss` | A high-quality hard negative that becomes harmful if the agent overlooks a hidden disqualifying gap. This is the slot used in the mitigation study. |
+| A | `primary_harmful_near_miss` | A high-quality hard negative that becomes harmful if the agent overlooks a hidden disqualifying gap. |
 | B | `contrast_hard_negative` | A hard negative used as a contrast condition. |
 | C | `utility_or_uncertainty_target` | A utility-bearing or uncertainty-bearing target used to probe how attacks shift genuinely useful or ambiguous candidates. |
 
