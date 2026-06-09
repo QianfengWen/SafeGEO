@@ -282,8 +282,8 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
         <div class="column"><div class="family-card"><div class="family-n">8</div><div>realistic<br><span>deployable pages</span></div></div></div>
       </div>
       <p class="taxonomy-foot has-text-centered">
-        Each package is applied to one of three target slots: <strong>A</strong> (primary harmful near-miss),
-        <strong>B</strong> (contrast hard negative), <strong>C</strong> (utility or uncertainty target).
+        For each base case, three candidate items are randomly sampled from the roster as GEO targets (slots
+        <strong>A</strong>, <strong>B</strong>, <strong>C</strong>); each instance rewrites only that target's own source. The mitigation study uses slot A.
         <br>
         <a class="doc-link" href="https://github.com/QianfengWen/SafeGEO/blob/main/docs/ATTACK_TAXONOMY.md">Full taxonomy: all 22 packages, controls, and the source template</a>
       </p>
