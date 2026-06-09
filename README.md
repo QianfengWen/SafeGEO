@@ -2,11 +2,16 @@
 
 # SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents
 
-[![Project Page](https://img.shields.io/badge/Project-Page-1f72b8.svg)](https://qianfengwen.github.io/SafeGEO/)
-![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-lightgrey.svg)
-[![Dataset](https://img.shields.io/badge/HuggingFace-Dataset-ffce1c.svg)](https://huggingface.co/datasets/wieeii/SafeGEO)
-[![Code License: Apache 2.0](https://img.shields.io/badge/Code-Apache%202.0-blue.svg)](LICENSE)
-[![Data License: CC BY 4.0](https://img.shields.io/badge/Data-CC%20BY%204.0-green.svg)](DATA_LICENSE)
+<p align="center">
+  <img alt="arXiv coming soon" src="https://img.shields.io/badge/Paper-coming%20soon-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white">
+  <a href="https://qianfengwen.github.io/SafeGEO/"><img alt="Project Page" src="https://img.shields.io/badge/Project-Page-1f72b8?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
+  <a href="https://huggingface.co/datasets/wieeii/SafeGEO"><img alt="Hugging Face Dataset" src="https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"></a>
+</p>
+<p align="center">
+  <a href="LICENSE"><img alt="Code License: Apache 2.0" src="https://img.shields.io/badge/Code-Apache%202.0-blue?style=flat-square&logo=apache&logoColor=white"></a>
+  <a href="DATA_LICENSE"><img alt="Data License: CC BY 4.0" src="https://img.shields.io/badge/Data-CC%20BY%204.0-green?style=flat-square&logo=creativecommons&logoColor=white"></a>
+  <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white">
+</p>
 
 Qianfeng Wen<sup>1,5,\*</sup>, Yifan Simon Liu<sup>2,\*</sup>, Xin Liu<sup>3,5,\*</sup>, Difan Jiao<sup>1</sup>, Blair Yang<sup>1,6</sup>, Junda Wu<sup>4</sup>, Zhenwei Tang<sup>1</sup>
 
