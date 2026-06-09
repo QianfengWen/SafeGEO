@@ -331,6 +331,58 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
     </div>
   </section>
 
+  <!-- ===================== RESULTS ===================== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title has-text-centered">Results</h2>
+      <p class="lead has-text-centered">
+        Three open-weight agents — Gemma&nbsp;4 31B IT, Qwen3.6 27B, Devstral Small 2 24B Instruct — plus a frontier
+        robustness check on DeepSeek-V4-Flash. Metrics: <strong>Target@3</strong> (attacked-target top-3),
+        <strong>HCV@1</strong> (hard-constraint violation@1), <strong>GT@3</strong>, <strong>uNDCG@5</strong>.
+      </p>
+      <figure class="figure results-fig">
+        <img src="static/images/results_model_comparison.png" alt="Realistic GEO attack vs. truthful-rewrite control across four agents">
+        <figcaption>
+          A single seller-controlled rewrite moves the attacked target into the top-3 far more often than a truthful
+          rewrite — across all four agents. DeepSeek-V4-Flash (boxed) is the most robust, yet still jumps from 4.6% to 72.6%.
+        </figcaption>
+      </figure>
+
+      <h3 class="results-subhead">Main attack — realistic GEO variants (control&nbsp;→&nbsp;attack)</h3>
+      <div class="results-wrap">
+        <table class="results-table">
+          <thead><tr><th>Model</th><th>Target@3</th><th>HCV@1</th><th>GT@3</th><th>uNDCG@5</th></tr></thead>
+          <tbody>
+            <tr><td>Gemma 4 31B IT</td><td>3.4 → <b>79.6</b> <span class="delta">+76.2</span></td><td>16.9 → 75.6 <span class="delta">+58.8</span></td><td>71.2 → 67.9 <span class="delta">−3.3</span></td><td>74.4 → 68.6 <span class="delta">−5.8</span></td></tr>
+            <tr><td>Qwen3.6 27B</td><td>8.1 → <b>78.3</b> <span class="delta">+70.2</span></td><td>24.2 → 83.7 <span class="delta">+59.5</span></td><td>61.2 → 60.8 <span class="delta">−0.4</span></td><td>66.5 → 63.6 <span class="delta">−3.0</span></td></tr>
+            <tr><td>Devstral Small 2 24B Instruct</td><td>12.7 → <b>90.9</b> <span class="delta">+78.2</span></td><td>41.1 → 90.7 <span class="delta">+49.7</span></td><td>50.7 → 47.9 <span class="delta">−2.8</span></td><td>67.4 → 59.2 <span class="delta">−8.2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="results-note">GEO moves a flawed target into the top-3 in up to <b>90.9%</b> of cases (≈3–13% under truthful controls); the strongest single variant (full-stack realistic, Devstral) reaches <b>+83.2</b> Target@3 over control.</p>
+
+      <h3 class="results-subhead">Mitigation — Target@3 reduction vs. baseline (Δ; lower is safer)</h3>
+      <div class="results-wrap">
+        <table class="results-table">
+          <thead><tr><th>Layer</th><th>Gemma 4 31B IT</th><th>Qwen3.6 27B</th><th>Devstral 2 24B</th></tr></thead>
+          <tbody>
+            <tr><td>L0 No mitigation <span class="muted">(Target@3)</span></td><td>79.6</td><td>78.3</td><td>90.9</td></tr>
+            <tr><td>L1 Defensive prompt</td><td class="good">−15.1</td><td class="good">−11.0</td><td class="good">−2.8</td></tr>
+            <tr><td>L2 Rationale elicitation</td><td class="good">−15.0</td><td class="bad">+7.5</td><td class="bad">+2.3</td></tr>
+            <tr class="hl"><td>L3 Evidence breakdown</td><td class="good"><b>−29.7</b></td><td class="good"><b>−39.2</b></td><td class="good"><b>−17.7</b></td></tr>
+            <tr><td>L4 Context balancing</td><td class="good">−11.5</td><td class="good">−4.5</td><td class="good">−3.2</td></tr>
+            <tr><td>L5 Instruction filtering</td><td class="good">−2.2</td><td class="bad">+3.0</td><td class="good">−0.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="results-note">The <b>L3 audited evidence breakdown</b> is the strongest defense (up to <b>−39.2</b> Target@3), but no layer restores no-GEO performance.</p>
+
+      <p class="results-note robustness">
+        <b>Robustness across scale.</b> DeepSeek-V4-Flash (larger, more recent) is the most robust agent we evaluate, yet a single seller-controlled rewrite still lifts Target@3 from <b>4.6% → 72.6%</b> (+68.0) and HCV@1 from 23.0% → 73.4% (+50.4). Full per-variant and 22-variant results are in the paper.
+      </p>
+    </div>
+  </section>
+
   <!-- ===================== RESOURCES ===================== -->
   <section class="section">
     <div class="container is-max-desktop has-text-centered">

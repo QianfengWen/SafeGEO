@@ -166,6 +166,22 @@ body {
 .metric-name { font-weight: 800; font-size: 1.25rem; color: var(--accent); font-family: 'SFMono-Regular', Consolas, monospace; }
 .metric-desc { margin-top: .5rem; color: var(--muted); font-size: .9rem; line-height: 1.45; }
 
+/* ---------- results ---------- */
+.results-fig { max-width: 560px; margin-bottom: .5rem; }
+.results-subhead { text-align: center; font-weight: 700; font-size: 1.08rem; color: var(--ink); margin: 2rem 0 .9rem; }
+.results-wrap { overflow-x: auto; max-width: 60rem; margin: 0 auto; }
+.results-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .94rem; }
+.results-table th { background: #f0f3f8; color: var(--muted); text-transform: uppercase; font-size: .76rem; letter-spacing: .04em; padding: .7rem .9rem; text-align: left; white-space: nowrap; }
+.results-table td { padding: .58rem .9rem; border-top: 1px solid var(--line); white-space: nowrap; }
+.results-table tr.hl { background: #eef5ef; }
+.results-table .good { color: var(--down); font-weight: 600; }
+.results-table .bad { color: var(--up); font-weight: 600; }
+.results-table .delta { color: #9aa3af; font-size: .85rem; }
+.results-table .muted { color: #9aa3af; font-weight: 400; font-size: .85rem; }
+.results-note { max-width: 50rem; margin: 1rem auto 0; color: var(--muted); font-size: .95rem; line-height: 1.6; text-align: center; }
+.results-note.robustness { margin-top: 1.6rem; padding: 1rem 1.2rem; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; text-align: left; }
+.results-note.robustness b { color: var(--ink); }
+
 /* ---------- bibtex ---------- */
 .bibtex-wrap { position: relative; max-width: 50rem; margin: 0 auto; }
 #bibtex-block {
