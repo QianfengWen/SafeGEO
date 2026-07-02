@@ -23,7 +23,9 @@ license: Apache-2.0
 preferred-citation:
   type: article
   title: "SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents"
+  journal: "arXiv preprint arXiv:2606.28356"
   year: 2026
+  url: "https://arxiv.org/abs/2606.28356"
   authors:
     - family-names: Wen
       given-names: Qianfeng

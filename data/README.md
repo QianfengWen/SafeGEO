@@ -30,6 +30,8 @@ configs:
 
 # SafeGEO Dataset
 
+Paper: <https://arxiv.org/abs/2606.28356> · Project page: <https://qianfengwen.github.io/SafeGEO/> · Code: <https://github.com/QianfengWen/SafeGEO>
+
 SafeGEO is a benchmark for testing whether recommendation agents preserve utility-aligned
 recommendations when seller-controlled web sources are rewritten with Generative Engine
 Optimization (GEO) attacks. It is built from 600 recommendation base cases spread evenly
@@ -173,9 +175,9 @@ If you use SafeGEO, please cite:
 @article{wen2026safegeo,
   title   = {SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents},
   author  = {Wen, Qianfeng and Liu, Yifan Simon and Liu, Xin and Jiao, Difan and Yang, Blair and Wu, Junda and Tang, Zhenwei},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2606.28356},
   year    = {2026}
 }
 ```
 
-Code & docs: <https://github.com/QianfengWen/SafeGEO> · Paper: <https://arxiv.org/abs/XXXX.XXXXX>
+Code & docs: <https://github.com/QianfengWen/SafeGEO> · Paper: <https://arxiv.org/abs/2606.28356>
