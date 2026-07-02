@@ -3,7 +3,7 @@
 # SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents
 
 <p align="center">
-  <img alt="arXiv coming soon" src="https://img.shields.io/badge/Paper-coming%20soon-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white">
+  <a href="https://arxiv.org/abs/2606.28356"><img alt="arXiv:2606.28356" src="https://img.shields.io/badge/arXiv-2606.28356-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white"></a>
   <a href="https://qianfengwen.github.io/SafeGEO/"><img alt="Project Page" src="https://img.shields.io/badge/Project-Page-1f72b8?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
   <a href="https://huggingface.co/datasets/wieeii/SafeGEO"><img alt="Hugging Face Dataset" src="https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"></a>
 </p>
@@ -26,7 +26,7 @@ Qianfeng Wen<sup>1,5,\*</sup>, Yifan Simon Liu<sup>2,\*</sup>, Xin Liu<sup>3,5,\
 
 SafeGEO tests whether recommendation agents keep their utility-aligned recommendations when sellers rewrite web sources using Generative Engine Optimization (GEO). It also includes an agent-side mitigation study of practical developer defenses.
 
-Project page: <https://qianfengwen.github.io/SafeGEO/> &nbsp;·&nbsp; Dataset: <https://huggingface.co/datasets/wieeii/SafeGEO>
+Paper: <https://arxiv.org/abs/2606.28356> &nbsp;·&nbsp; Project page: <https://qianfengwen.github.io/SafeGEO/> &nbsp;·&nbsp; Dataset: <https://huggingface.co/datasets/wieeii/SafeGEO>
 
 This release contains:
 
@@ -37,7 +37,7 @@ This release contains:
 
 ## News
 
-- June 2026: first public release of the benchmark, dataset, and mitigation study. The arXiv preprint is coming soon.
+- June 2026: arXiv preprint, benchmark, dataset, and mitigation study released.
 
 ## Contents
 
@@ -256,7 +256,7 @@ The headline numbers come from full runs (`scripts/run_benchmark.sh`, `scripts/r
 @article{wen2026safegeo,
   title   = {SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents},
   author  = {Wen, Qianfeng and Liu, Yifan Simon and Liu, Xin and Jiao, Difan and Yang, Blair and Wu, Junda and Tang, Zhenwei},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2606.28356},
   year    = {2026}
 }
 ```
