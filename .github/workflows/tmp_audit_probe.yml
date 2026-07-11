@@ -1,4 +1,4 @@
-name: Temporary SafeGEO audit probe
+name: Temporary SafeGEO full-data export
 
 on:
   pull_request:
@@ -10,20 +10,15 @@ permissions:
   contents: read
 
 jobs:
-  probe:
+  export:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install package
-        run: python -m pip install -e .
-      - name: Build probe
-        run: python tools/tmp_audit_probe.py
-      - name: Upload probe
+      - name: Package public dataset and loader
+        run: tar -czf safegeo_full_data.tar.gz data src/safegeo
+      - name: Upload full data
         uses: actions/upload-artifact@v4
         with:
-          name: safegeo-audit-probe
-          path: tmp_probe_output/
+          name: safegeo-full-data
+          path: safegeo_full_data.tar.gz
           retention-days: 1
