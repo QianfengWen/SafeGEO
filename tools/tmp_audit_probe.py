@@ -17,3 +17,4 @@ for config in configs:
     }
 (OUT/'schema_and_samples.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
 print(json.dumps({k:{'count':v['count'],'keys':v['keys']} for k,v in report.items()}, indent=2))
+# Triggered from the temporary PR build.
