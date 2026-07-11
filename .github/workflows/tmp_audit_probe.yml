@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - tmp-human-audit-package-20260711
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
