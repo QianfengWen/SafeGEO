@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - tmp-human-audit-annotator2-20260712
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -37,6 +40,7 @@ jobs:
         run: cat tmp_human_audit_annotator2/status.json
 
       - name: Commit extracted case packets to the temporary branch
+        if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
