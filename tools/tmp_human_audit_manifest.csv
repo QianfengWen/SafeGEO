@@ -1,0 +1,61 @@
+case_id,vertical,vertical_display,scoring_reference_audit,evidence_label_audit,seed
+GRT-ai-meeting-transcription-014,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-024,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-047,ai_meeting_transcription,AI meeting transcription,True,False,20260711
+GRT-ai-meeting-transcription-052,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-055,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-060,ai_meeting_transcription,AI meeting transcription,True,False,20260711
+GRT-ai-meeting-transcription-066,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-076,ai_meeting_transcription,AI meeting transcription,True,True,20260711
+GRT-ai-meeting-transcription-086,ai_meeting_transcription,AI meeting transcription,True,False,20260711
+GRT-ai-meeting-transcription-094,ai_meeting_transcription,AI meeting transcription,True,False,20260711
+GRT-baby-monitor-006,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-008,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-014,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-038,baby_monitor,Baby monitor,True,False,20260711
+GRT-baby-monitor-046,baby_monitor,Baby monitor,True,False,20260711
+GRT-baby-monitor-053,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-067,baby_monitor,Baby monitor,True,False,20260711
+GRT-baby-monitor-073,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-083,baby_monitor,Baby monitor,True,True,20260711
+GRT-baby-monitor-092,baby_monitor,Baby monitor,True,False,20260711
+GRT-carry-on-backpack-007,carry_on_backpack,Carry-on backpack,True,False,20260711
+GRT-carry-on-backpack-010,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-carry-on-backpack-023,carry_on_backpack,Carry-on backpack,True,False,20260711
+GRT-carry-on-backpack-035,carry_on_backpack,Carry-on backpack,True,False,20260711
+GRT-carry-on-backpack-038,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-carry-on-backpack-043,carry_on_backpack,Carry-on backpack,True,False,20260711
+GRT-carry-on-backpack-051,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-carry-on-backpack-052,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-carry-on-backpack-091,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-carry-on-backpack-099,carry_on_backpack,Carry-on backpack,True,True,20260711
+GRT-home-air-purifier-000,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-003,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-016,home_air_purifier,Home air purifier,True,False,20260711
+GRT-home-air-purifier-032,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-033,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-048,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-056,home_air_purifier,Home air purifier,True,False,20260711
+GRT-home-air-purifier-082,home_air_purifier,Home air purifier,True,False,20260711
+GRT-home-air-purifier-083,home_air_purifier,Home air purifier,True,True,20260711
+GRT-home-air-purifier-094,home_air_purifier,Home air purifier,True,False,20260711
+GRT-noise-canceling-headphones-026,noise_canceling_headphones,Noise-canceling headphones,True,False,20260711
+GRT-noise-canceling-headphones-033,noise_canceling_headphones,Noise-canceling headphones,True,False,20260711
+GRT-noise-canceling-headphones-035,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-noise-canceling-headphones-039,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-noise-canceling-headphones-051,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-noise-canceling-headphones-053,noise_canceling_headphones,Noise-canceling headphones,True,False,20260711
+GRT-noise-canceling-headphones-063,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-noise-canceling-headphones-069,noise_canceling_headphones,Noise-canceling headphones,True,False,20260711
+GRT-noise-canceling-headphones-072,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-noise-canceling-headphones-093,noise_canceling_headphones,Noise-canceling headphones,True,True,20260711
+GRT-office-chair-003,office_chair,Office chair,True,True,20260711
+GRT-office-chair-010,office_chair,Office chair,True,False,20260711
+GRT-office-chair-027,office_chair,Office chair,True,True,20260711
+GRT-office-chair-031,office_chair,Office chair,True,False,20260711
+GRT-office-chair-036,office_chair,Office chair,True,True,20260711
+GRT-office-chair-038,office_chair,Office chair,True,True,20260711
+GRT-office-chair-044,office_chair,Office chair,True,True,20260711
+GRT-office-chair-050,office_chair,Office chair,True,True,20260711
+GRT-office-chair-064,office_chair,Office chair,True,False,20260711
+GRT-office-chair-068,office_chair,Office chair,True,False,20260711
