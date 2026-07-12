@@ -1,0 +1,31 @@
+name: Temporary SafeGEO human-audit extraction
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install extraction dependency
+        run: python -m pip install --disable-pip-version-check pyarrow
+      - name: Extract fixed audit rows
+        run: python tmp/extract_safegeo_human_audit.py
+      - name: Upload selected rows
+        uses: actions/upload-artifact@v4
+        with:
+          name: safegeo-audit-selected-rows
+          path: safegeo_audit_selected_rows.json.gz
+          if-no-files-found: error
+          retention-days: 1
