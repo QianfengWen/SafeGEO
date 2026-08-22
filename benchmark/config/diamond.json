@@ -17,7 +17,7 @@
   "package_selection_basis": {
     "model": "DeepSeek-V4-Flash",
     "metric": "Target@3",
-    "scope": "eight plausible synthetic GEO archetypes",
+    "scope": "eight realistic GEO packages",
     "values_percent": {
       "selective_comparison_note": 82.3,
       "false_fit_checklist": 79.1,

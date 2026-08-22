@@ -26,9 +26,6 @@ PRIMITIVES = {
 
 LAYER_NAMES = {
     "L0": "L0_source_only_baseline", "L1": "L1_prompt_mitigation",
-    # Keep the released L2 artifact identifier for compatibility. The paper
-    # uses the precise display name "Rationale emphasis" because the benchmark
-    # contract already required rationales and citations.
     "L2": "L2_rationale_elicitation_mitigation", "L3": "L3_evidence_breakdown_mitigation",
     "L4": "L4_context_balancing_mitigation", "L5": "L5_instruction_filtering_mitigation",
 }

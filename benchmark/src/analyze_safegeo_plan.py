@@ -12,6 +12,8 @@ import random
 from statistics import median
 from typing import Any, Iterable
 
+import numpy as np
+
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[2] / "src"))
@@ -243,33 +245,6 @@ def primitive_regression(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     if not attacks:
         return []
 
-    try:
-        import numpy as np
-    except Exception as exc:  # pragma: no cover - depends on environment
-        out: list[dict[str, Any]] = []
-        for outcome in REGRESSION_OUTCOMES:
-            for key in ATTACK_VECTOR_KEYS:
-                on = [numeric(r.get(outcome)) for r in attacks if r.get(f"attack_vector_{key}")]
-                off = [numeric(r.get(outcome)) for r in attacks if not r.get(f"attack_vector_{key}")]
-                on = [x for x in on if x is not None]
-                off = [x for x in off if x is not None]
-                if not on or not off:
-                    continue
-                out.append(
-                    {
-                        "outcome": outcome,
-                        "term": f"attack_vector_{key}",
-                        "estimate": (sum(on) / len(on)) - (sum(off) / len(off)),
-                        "mean_when_present": sum(on) / len(on),
-                        "mean_when_absent": sum(off) / len(off),
-                        "n_present": len(on),
-                        "n_absent": len(off),
-                        "estimator": "marginal_difference_fallback",
-                        "note": f"numpy unavailable for fixed-effect least squares: {exc}",
-                    }
-                )
-        return out
-
     cat_fields = ["attacked_target_slot", "attacked_target_difficulty", "vertical", "model", "base_case_id"]
     categories = {field: sorted({str(r.get(field)) for r in attacks if r.get(field) is not None}) for field in cat_fields}
     feature_names = [f"attack_vector_{key}" for key in ATTACK_VECTOR_KEYS]
@@ -340,7 +315,7 @@ def main() -> None:
     write_csv(args.out_dir / "experiment4_target_slot.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "attacked_target_slot"]))
     write_csv(args.out_dir / "experiment4_target_difficulty.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "attacked_target_difficulty"]))
     write_csv(args.out_dir / "experiment5_citation_focus.csv", summarize([r for r in rows if r.get("package_id") in CITATION_FOCUS_PACKAGES], ["model", "package_id"]))
-    write_csv(args.out_dir / "experiment6_realistic_archetypes.csv", summarize([r for r in rows if r.get("package_id") in REALISTIC_PACKAGES or r.get("package_id") in CONTROL_PACKAGES], ["model", "package_id", "package_family"]))
+    write_csv(args.out_dir / "experiment6_realistic_packages.csv", summarize([r for r in rows if r.get("package_id") in REALISTIC_PACKAGES or r.get("package_id") in CONTROL_PACKAGES], ["model", "package_id", "package_family"]))
     write_csv(args.out_dir / "experiment7_control_comparison.csv", control_comparison(rows))
     if args.bootstrap_reps > 0:
         write_csv(args.out_dir / "bootstrap_model_attack_ci.csv", bootstrap_cis(rows, args.bootstrap_reps, args.seed))

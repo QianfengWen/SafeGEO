@@ -4,7 +4,7 @@
 benchmark mode: reads a `visible` config (Parquet dir/file) and emits the
 prediction-schema JSON the SafeGEO scorer expects, ranking candidates in roster
 order. mitigation mode: reads a mitigation runfile and emits per-run-instance
-predictions in the accountable/simple schema shape.
+predictions in the same benchmark response schema.
 """
 from __future__ import annotations
 
@@ -43,8 +43,19 @@ def run(mode: str, source: Path, out: Path, model: str) -> int:
             for row in read_records(source):
                 vis = row.get("visible_instance", {})
                 ids = _roster_ids(vis)
-                prediction = {"ranked_candidate_ids": ids,
-                              "top_recommendations": ids[:3], "answer": "mock"}
+                top = [
+                    {"item_id": item_id, "rank": rank, "rationale": "mock", "citations": []}
+                    for rank, item_id in enumerate(ids[:3], start=1)
+                ]
+                prediction = {
+                    "ranking_all_items": ids,
+                    "top_recommendations": top,
+                    "constraint_audit": [],
+                    "rejected_or_caveated_items": [],
+                    "source_assessment": [],
+                }
+                if row.get("layer_id") == "L3":
+                    prediction["evidence_checks"] = []
                 fh.write(json.dumps({
                     "run_instance_id": row["run_instance_id"],
                     "instance_id": row["run_instance_id"],

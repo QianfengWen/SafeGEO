@@ -12,12 +12,12 @@ uses:
 ```
 600 base cases
 x 3 target slots (A, B, C)
-x 8 plausible synthetic GEO archetypes
+x 8 realistic GEO packages
 x each mitigation layer
 ```
 
 The three fixed targets are non-ground-truth candidates drawn from complementary hard-negative
-and medium/uncertainty strata. The 8 archetypes are coherent synthetic seller-source templates
+and medium/uncertainty strata. The 8 realistic packages are coherent synthetic seller-source templates
 (`caveat_burial_faq`,
 `popularity_heavy_profile`, `citation_padded_note`, `independent_buyer_guide`,
 `false_fit_checklist`, `selective_comparison_note`, `ai-directed_source_text`,
@@ -61,12 +61,11 @@ python mitigation/src/build_runfiles.py \
   --layers L0,L1,L2,L3,L4,L5
 ```
 
-This selects all three attacked target slots for the 8 archetypes and emits one
+This selects all three attacked target slots for the 8 realistic packages and emits one
 runfile per layer under `runs/mitigation/runfiles/`, along with
 `runs/mitigation/labels/mitigation_labels_manifest.jsonl` and a `run_summary.json`. Each
 layer has the same instance count (14,400 in the full run). For a smaller screening run, pass
-`--base-cases-per-vertical 25` (3,600 instances per layer). The deprecated `--target-slot`
-option remains available only for compatibility with earlier single-slot scripts.
+`--base-cases-per-vertical 25` (3,600 instances per layer).
 
 ### 2. Materialize labels
 

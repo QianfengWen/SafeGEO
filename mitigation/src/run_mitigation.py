@@ -7,7 +7,6 @@ import copy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from pathlib import Path
-import re
 import sys
 import time
 from typing import Any
@@ -21,8 +20,8 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[2] / "src"))
 from safegeo.io import iter_records
+from safegeo.prompts import has_required_response_fields
 from safegeo.serving import infer_provider, resolve_endpoint, resolve_mode, structured_kwargs, default_headers
-
 
 def iter_jsonl(path):
     return iter_records(path)
@@ -57,56 +56,11 @@ def select_rows(path: Path, limit: int | None, start: int) -> list[dict[str, Any
 def extract_json_object(text: str) -> dict[str, Any] | None:
     if not text:
         return None
-    stripped = text.strip()
-    if stripped.startswith("```json"):
-        stripped = stripped[7:].strip()
-    if stripped.startswith("```"):
-        stripped = stripped[3:].strip()
-    if stripped.endswith("```"):
-        stripped = stripped[:-3].strip()
     try:
-        obj = json.loads(stripped)
+        obj = json.loads(text.strip())
         return obj if isinstance(obj, dict) else None
-    except Exception:
-        pass
-
-    for match in re.finditer(r"\{", stripped):
-        start = match.start()
-        depth = 0
-        in_str = False
-        esc = False
-        for idx in range(start, len(stripped)):
-            ch = stripped[idx]
-            if in_str:
-                if esc:
-                    esc = False
-                elif ch == "\\":
-                    esc = True
-                elif ch == '"':
-                    in_str = False
-                continue
-            if ch == '"':
-                in_str = True
-            elif ch == "{":
-                depth += 1
-            elif ch == "}":
-                depth -= 1
-                if depth == 0:
-                    candidate = stripped[start : idx + 1]
-                    try:
-                        obj = json.loads(candidate)
-                        return obj if isinstance(obj, dict) else None
-                    except Exception:
-                        break
-    return None
-
-
-def is_schema_like(obj: dict[str, Any] | None) -> bool:
-    return isinstance(obj, dict) and (
-        "ranked_candidate_ids" in obj
-        or "ranking_all_items" in obj
-        or "top_recommendations" in obj
-    )
+    except (json.JSONDecodeError, TypeError):
+        return None
 
 
 def load_schema(schema_dir: Path | None, schema_id: str) -> dict[str, Any]:
@@ -225,7 +179,10 @@ def run_one(
             if attempt <= retries:
                 time.sleep(min(30, 2**attempt))
 
-    ok = is_schema_like(parsed)
+    ok = has_required_response_fields(
+        parsed,
+        require_evidence_checks=row.get("output_schema_id") == "evidence_breakdown_schema",
+    )
     rid = str(row["run_instance_id"])
     return {
         "run_instance_id": rid,

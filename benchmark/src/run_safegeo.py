@@ -6,7 +6,6 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from pathlib import Path
-import re
 import sys
 import time
 from typing import Any, Iterable
@@ -21,13 +20,11 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[2] / "src"))
 from safegeo.io import read_records, iter_records
-from safegeo.prompts import build_recommendation_user_prompt
+from safegeo.prompts import build_recommendation_user_prompt, has_required_response_fields
 from safegeo.taxonomy import REALISTIC_PACKAGES as _RP, CONTROL_PACKAGES
 from safegeo.serving import infer_provider, resolve_endpoint, resolve_mode, structured_kwargs, default_headers
 
 REALISTIC_PACKAGES = set(_RP)
-
-
 def iter_jsonl(path):
     return iter_records(path)
 
@@ -88,64 +85,14 @@ def select_rows(
     return rows
 
 
-def build_user_prompt(row: dict[str, Any]) -> str:
-    """Backward-compatible wrapper around the shared request builder."""
-    return build_recommendation_user_prompt(row)
-
 def extract_json_object(text: str) -> dict[str, Any] | None:
     if not text:
         return None
-    stripped = text.strip()
-    if stripped.startswith("```json"):
-        stripped = stripped[7:].strip()
-    if stripped.startswith("```"):
-        stripped = stripped[3:].strip()
-    if stripped.endswith("```"):
-        stripped = stripped[:-3].strip()
     try:
-        obj = json.loads(stripped)
+        obj = json.loads(text.strip())
         return obj if isinstance(obj, dict) else None
-    except Exception:
-        pass
-
-    for match in re.finditer(r"\{", stripped):
-        start = match.start()
-        depth = 0
-        in_str = False
-        esc = False
-        for idx in range(start, len(stripped)):
-            ch = stripped[idx]
-            if in_str:
-                if esc:
-                    esc = False
-                elif ch == "\\":
-                    esc = True
-                elif ch == '"':
-                    in_str = False
-                continue
-            if ch == '"':
-                in_str = True
-            elif ch == "{":
-                depth += 1
-            elif ch == "}":
-                depth -= 1
-                if depth == 0:
-                    candidate = stripped[start : idx + 1]
-                    try:
-                        obj = json.loads(candidate)
-                        return obj if isinstance(obj, dict) else None
-                    except Exception:
-                        break
-    return None
-
-
-def is_schema_like(obj: dict[str, Any] | None) -> bool:
-    return isinstance(obj, dict) and (
-        "ranking_all_items" in obj
-        or "ranked_candidate_ids" in obj
-        or "top_recommendations" in obj
-        or "constraint_audit" in obj
-    )
+    except (json.JSONDecodeError, TypeError):
+        return None
 
 
 def run_one(
@@ -165,7 +112,7 @@ def run_one(
     started = time.time()
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": build_user_prompt(row)},
+        {"role": "user", "content": build_recommendation_user_prompt(row)},
     ]
     for attempt in range(1, retries + 2):
         try:
@@ -187,14 +134,15 @@ def run_one(
             if attempt <= retries:
                 time.sleep(min(30, 2**attempt))
 
+    valid_response = has_required_response_fields(parsed)
     return {
         "instance_id": row["instance_id"],
         "query_id": row["query_id"],
         "vertical": row["vertical"],
         "split": row["split"],
         "model": model,
-        "parsed": parsed if is_schema_like(parsed) else None,
-        "parse_error": not is_schema_like(parsed),
+        "parsed": parsed if valid_response else None,
+        "parse_error": not valid_response,
         "raw_output": raw,
         "request_error": error,
         "latency_s": round(time.time() - started, 3),

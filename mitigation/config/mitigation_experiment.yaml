@@ -1,9 +1,9 @@
 experiment_name: agent_design_mitigation_study
 base_dataset_name: source_only_attack_benchmark
 purpose: >-
-  Evaluate prompt/input-level interventions on a plausible synthetic GEO stress setting.
+  Evaluate prompt/input-level interventions on the realistic GEO packages.
   The experiment uses 600 base cases, all three target slots, and eight plausible
-  synthetic GEO archetypes. No no-attack controls are used in this mitigation stress test;
+  realistic GEO packages. No no-attack controls are used in this mitigation stress test;
   each layer is compared against L0 on the same attacked instances.
 
 target_selection:

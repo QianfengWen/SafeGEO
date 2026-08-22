@@ -37,16 +37,15 @@ python benchmark/src/run_safegeo.py \
 The runner targets any OpenAI-compatible endpoint. `--provider` (`auto`, `vllm`, `openai`,
 `openrouter`) selects a preset and `--json-mode` (`auto`, `guided_json`, `json_object`, `off`)
 the structured-output strategy; with the defaults it auto-detects vLLM and uses `guided_json`.
-The repository includes the model-facing system and user prompts verbatim. The compact system
-message uses the shorthand `ranked_candidate_ids`/`answer`; the full user message and enforced
-schema specify the `ranking_all_items` contract used for scoring. The scorer also accepts the
-shorthand key as a fallback for backends without guided decoding.
+The repository includes the model-facing system and user prompts verbatim. Every runner and
+scorer uses the released `ranking_all_items` contract; outputs that do not satisfy that contract
+are recorded as parse failures.
 
 The `--experiment` flag selects which instances to run:
 
 | Mode | Instances run |
 |---|---|
-| `main_realistic` | The 8 plausible synthetic archetypes plus the 2 controls (stable CLI name retained). |
+| `main_realistic` | The 8 realistic packages plus the 2 controls. |
 | `full` | All 22 packages across all 3 target slots plus controls. |
 | `controls` | Controls only. |
 
@@ -93,7 +92,7 @@ The analyzer writes `dataset_stats.json` and a set of experiment tables:
 - `experiment4_target_slot.csv`, `experiment4_target_difficulty.csv`: effects by target slot
   and difficulty.
 - `experiment5_citation_focus.csv`: citation behavior on the citation-focused packages.
-- `experiment6_realistic_archetypes.csv`: the plausible synthetic archetypes versus controls.
+- `experiment6_realistic_packages.csv`: the realistic packages versus controls.
 - `experiment7_control_comparison.csv`: attacked instances versus truthful controls.
 - `bootstrap_model_attack_ci.csv`: bootstrap confidence intervals (controlled by
   `--bootstrap-reps` and `--seed`).
@@ -140,7 +139,7 @@ The full chain runs end to end against the tiny `sample/` subset with no GPU; se
 For rapid screening, substitute `diamond/visible`, `diamond/labels`, and the corresponding
 Diamond annotation directories in the commands above, and use `--experiment full`. Diamond has
 600 instances (120 vertical-balanced base cases, one target slot, three deliberately difficult
-archetypes, and two controls). It is a biased stress set and must not be used to estimate the
+realistic packages, and two controls). It is a biased stress set and must not be used to estimate the
 full benchmark average; see [`diamond/README.md`](../diamond/README.md).
 
 Published camera-ready aggregate tables, including DeepSeek-V4-Flash and the paired mechanism

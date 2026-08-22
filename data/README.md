@@ -164,8 +164,7 @@ benchmark annotations, not independent claims about real-world product quality.
 | `quality_group` | string | Ground-truth, hard-negative, or medium-negative grouping. |
 | `candidate_shortlist_rank` | int | Position in the canonicalized upstream candidate shortlist; this is not the benchmark-reference rank. |
 
-The scorer keeps a fallback for the old `verified_utility_score` name so earlier local copies
-remain readable; the released Parquet files use only `benchmark_reference_utility`.
+The released Parquet files and scorers use only `benchmark_reference_utility`.
 
 ## A note on hidden attack metadata
 

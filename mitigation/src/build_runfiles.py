@@ -4,7 +4,7 @@
 This script reads a SafeGEO Parquet dataset and constructs layer-specific
 runfiles for the mitigation experiment:
 
-  600 base cases × 3 target slots × 8 plausible synthetic archetypes ×
+  600 base cases × 3 target slots × 8 realistic packages ×
   L0–L5 conditions.
 
 It does not include no-GEO or all-truthful controls. Mitigation is measured by
@@ -13,7 +13,7 @@ comparing each layer against L0 on the same attacked instances.
 Example:
   python mitigation/src/build_runfiles.py \
     --dataset-root data \
-    --out runs/mitigation_all_targets_archetypes \
+    --out runs/mitigation_all_targets_realistic \
     --layers L0,L1,L2,L3,L4,L5
 
 Screening:
@@ -119,12 +119,6 @@ def main() -> None:
         default="A,B,C",
         help="Comma-separated attacked target slots (default: A,B,C).",
     )
-    ap.add_argument(
-        "--target-slot",
-        choices=["A", "B", "C"],
-        default=None,
-        help="Deprecated single-slot alias; overrides --target-slots.",
-    )
     ap.add_argument("--layers", default="L0,L1,L2,L3,L4,L5")
     ap.add_argument("--base-cases-per-vertical", type=int, default=None, help="Use for screening, e.g. 25")
     ap.add_argument("--seed", default="safegeo-mitigation")
@@ -135,11 +129,7 @@ def main() -> None:
         if layer not in LAYER_IDS:
             raise ValueError(f"Invalid layer {layer}; choose from {sorted(LAYER_IDS)}")
 
-    target_slots = (
-        [args.target_slot]
-        if args.target_slot
-        else [slot.strip() for slot in args.target_slots.split(",") if slot.strip()]
-    )
+    target_slots = [slot.strip() for slot in args.target_slots.split(",") if slot.strip()]
     if not target_slots or any(slot not in {"A", "B", "C"} for slot in target_slots):
         raise ValueError("--target-slots must contain only A, B, and/or C")
 

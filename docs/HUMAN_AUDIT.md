@@ -32,5 +32,5 @@ identifier-sanitized construction query. All 600 unique queries and all 40,800 e
 match. The executable check is:
 
 ```bash
-python scripts/align_visible_queries.py data sample --check
+python scripts/audit_camera_ready_claims.py
 ```

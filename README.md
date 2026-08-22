@@ -31,7 +31,7 @@ Paper: <https://arxiv.org/abs/2606.28356> &nbsp;·&nbsp; Project page: <https://
 This release contains:
 
 - A GEO robustness benchmark with 22 attack variants and 2 controls (unmodified and truthful rewrite), over 600 cases and 3 target slots (40,800 instances).
-- A structured attack library of 7 manipulation primitives across 3 loci, from single moves to coherent plausible synthetic GEO archetypes.
+- A structured attack library of 7 manipulation primitives across 3 loci, from single moves to coherent realistic GEO packages.
 - A Hugging Face dataset in 10 Parquet configs, with hidden benchmark-reference labels and line-level evidence annotations.
 - A matched mitigation study with the exact benchmark request as L0 and five prompt/input-level interventions (L1 to L5).
 - **SafeGEO Diamond**, a 600-instance, high-difficulty screening split for inexpensive model iteration.
@@ -78,7 +78,7 @@ The result figures and a fuller walkthrough are on the [project page](https://qi
 
 We evaluate three open-weight rerankers (Gemma 4 31B IT, Qwen3.6 27B, and Devstral Small 2 24B Instruct), with a frontier-scale check on DeepSeek-V4-Flash. The metrics are Target@3 (attacked-target top-3 rate), HCV@1 (hard-constraint violation at rank 1), GT@3 (ground-truth at 3), and uNDCG@5 (utility NDCG at 5); see [Evaluation metrics](#evaluation-metrics). The plots are on the [project page](https://qianfengwen.github.io/SafeGEO/), and the additional camera-ready tables are in [`results/`](results/).
 
-Main attack on the eight plausible synthetic GEO archetypes, averaged over targets (truthful-rewrite control, then GEO attack; parenthetical changes are percentage points):
+Main attack on the eight realistic GEO packages, averaged over targets (truthful-rewrite control, then GEO attack; parenthetical changes are percentage points):
 
 | Model | Target@3 | HCV@1 | GT@3 | uNDCG@5 |
 |---|---|---|---|---|
@@ -100,7 +100,7 @@ Mitigation, reported as the Target@3 change relative to the no-mitigation baseli
 | L4 Context balancing | −11.5 | −4.5 | −3.2 |
 | L5 Instruction filtering | −2.2 | +3.0 | −0.5 |
 
-L3 asks the model to generate candidate-level evidence checks from the visible packet before ranking. It gives the largest reduction, reaching 39.2 percentage points on Target@3. On DeepSeek-V4-Flash, the archetype average raises Target@3 from 4.6% to 72.6% (+68.0 points) and HCV@1 from 23.0% to 73.4% (+50.4 points). Full aggregate tables are in [`results/`](results/) and the paper.
+L3 asks the model to generate candidate-level evidence checks from the visible packet before ranking. It gives the largest reduction, reaching 39.2 percentage points on Target@3. On DeepSeek-V4-Flash, the realistic-package average raises Target@3 from 4.6% to 72.6% (+68.0 points) and HCV@1 from 23.0% to 73.4% (+50.4 points). Full aggregate tables are in [`results/`](results/) and the paper.
 
 ## Installation
 
@@ -203,23 +203,20 @@ SafeGEO models GEO as an adversary that rewrites seller-controlled sources along
 | `S` | salience manipulation | model-facing |
 | `M` | model-directed instruction | model-facing |
 
-Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 plausible synthetic archetypes. The released `realistic` family string is retained as a stable dataset identifier, not as a claim about live-web prevalence. For each base case, slots A and B are sampled from non-ground-truth hard negatives and slot C from a non-ground-truth medium/uncertainty stratum. Each target is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
+Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic packages. These packages use coherent synthetic seller-source templates; the name describes the benchmark family, not measured live-web prevalence. For each base case, slots A and B are sampled from non-ground-truth hard negatives and slot C from a non-ground-truth medium/uncertainty stratum. Each target is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
 
 ## Mitigation study
 
-Given that GEO attacks work, what can a system developer do without changing the model? The study compares six matched conditions on the same attacked instances (all three target slots, the 8 plausible synthetic archetypes, 14,400 instances per layer) and reports changes against the unmitigated baseline.
+Given that GEO attacks work, what can a system developer do without changing the model? The study compares six matched conditions on the same attacked instances (all three target slots, the 8 realistic packages, 14,400 instances per layer) and reports changes against the unmitigated baseline.
 
 | Layer | Strategy | What changes |
 |:--:|---|---|
 | L0 | No mitigation | Exact original benchmark system prompt, user serialization, source packet, and output contract. |
 | L1 | Defensive prompt | A defensive system instruction is added; nothing else changes. |
-| L2 | Rationale emphasis | The output instruction for the existing rationale and citation fields is tightened. |
+| L2 | Rationale elicitation | The output instruction for the existing rationale and citation fields is tightened. |
 | L3 | Evidence breakdown | The same model must generate candidate-level evidence checks before final ranking; no external sheet is supplied. |
 | L4 | Context balancing | An instruction asks the model to balance evidence across the unchanged source packet. |
 | L5 | Instruction filtering | An instruction asks the model to ignore source-internal directives; no source line is removed. |
-
-For backward compatibility, runfiles retain the released internal identifier
-`L2_rationale_elicitation_mitigation`; its camera-ready display name is **Rationale emphasis**.
 
 See [`mitigation/README.md`](mitigation/README.md) for the pipeline and the reduction-vs-L0 metrics.
 

@@ -2,7 +2,7 @@ import importlib.util
 from pathlib import Path
 
 from safegeo.io import read_records
-from safegeo.prompts import build_recommendation_user_prompt
+from safegeo.prompts import build_recommendation_user_prompt, has_required_response_fields
 from safegeo.taxonomy import LAYER_NAMES, LAYER_SCHEMAS
 
 
@@ -29,10 +29,33 @@ def test_l0_reuses_original_benchmark_prompt_and_schema():
     assert RUN.load_schema(None, "benchmark_prediction_schema")
 
 
+def test_all_layers_use_only_the_canonical_output_contract():
+    prompt_paths = [
+        Path("mitigation") / prompt_path
+        for prompt_path in BUILD.PROMPT_FILES.values()
+    ]
+    for prompt_path in prompt_paths:
+        text = prompt_path.resolve().read_text(encoding="utf-8")
+        assert "Return only JSON matching the response schema" in text
+
+    complete = {
+        "ranking_all_items": [],
+        "top_recommendations": [],
+        "constraint_audit": [],
+        "rejected_or_caveated_items": [],
+        "source_assessment": [],
+    }
+    assert has_required_response_fields(complete)
+    assert not has_required_response_fields({"ranking_all_items": []})
+    assert not has_required_response_fields(complete, require_evidence_checks=True)
+    complete["evidence_checks"] = []
+    assert has_required_response_fields(complete, require_evidence_checks=True)
+
+
 def test_benchmark_and_mitigation_share_user_serialization():
     row = read_records("sample/visible")[0]
     expected = build_recommendation_user_prompt(row)
-    assert BENCHMARK.build_user_prompt(row) == expected
+    assert BENCHMARK.build_recommendation_user_prompt(row) == expected
 
 
 def test_layers_do_not_mutate_visible_packet():

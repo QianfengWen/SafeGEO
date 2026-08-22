@@ -90,12 +90,12 @@ seven primitives at once.
 | `epistemic_model_facing_geo` | A E S M | - / yes / yes | epistemic plus model-facing manipulation |
 | `full_stack_diagnostic_geo` | A U C R E S M | yes / yes / yes | controlled full-stack diagnostic attack |
 
-### Plausible synthetic archetypes
+### Realistic packages
 
 These packages blend primitives across loci into coherent controlled seller-source templates
 such as FAQs, buyer guides, and comparison notes. The released `package_family=realistic`
 value is retained as a stable identifier. “Plausible” describes the textual construction;
-live-web frequency and layout are outside this controlled benchmark. These archetypes are the
+live-web frequency and layout are outside this controlled benchmark. These realistic packages are the
 focus of the mitigation study.
 
 | Package | Active primitives | Definition |
@@ -150,7 +150,7 @@ mitigation study also evaluates all three slots.
 
 - 7 primitives (`A`, `U`, `C`, `R`, `E`, `S`, `M`).
 - 3 manipulation loci (content, epistemic, model-facing).
-- 22 attack packages: 7 atomic, 3 block, 4 cross-block, 8 plausible synthetic archetypes (stable family id: `realistic`).
+- 22 attack packages: 7 atomic, 3 block, 4 cross-block, and 8 realistic packages.
 - 2 controls (`original_no_geo_control`, `all_truthful_target_control`).
 - 3 target slots (A, B, C).
 

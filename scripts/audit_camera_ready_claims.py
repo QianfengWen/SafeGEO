@@ -193,13 +193,13 @@ def audit_results() -> dict[str, Any]:
             ),
         )
     ) == (82.3, 77.7, 81.8, 58.8, 65.4)
-    archetypes = [row for row in all22.values() if row["family"] == "archetype"]
-    assert len(archetypes) == 8
-    archetype_average = {
-        key: round(sum(float(row[key]) for row in archetypes) / len(archetypes), 1)
+    realistic = [row for row in all22.values() if row["family"] == "realistic"]
+    assert len(realistic) == 8
+    realistic_average = {
+        key: round(sum(float(row[key]) for row in realistic) / len(realistic), 1)
         for key in ("target_at_3", "hcv_at_1", "gt_at_3", "undcg_at_5")
     }
-    assert archetype_average == {
+    assert realistic_average == {
         "target_at_3": 72.6,
         "hcv_at_1": 73.4,
         "gt_at_3": 57.7,
@@ -220,8 +220,8 @@ def audit_results() -> dict[str, Any]:
 
     return {
         "rows": {name: len(rows) for name, rows in tables.items()},
-        "archetype_average": archetype_average,
-        "strongest_archetype": strongest["display_name"],
+        "realistic_average": realistic_average,
+        "strongest_realistic_package": strongest["display_name"],
         "deepseek_l3_target_reduction_pp": float(
             mitigation["L3"]["target_delta_vs_l0_pp"]
         ),

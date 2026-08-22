@@ -8,7 +8,7 @@ Files:
 - [`deepseek_v4_flash_all22.csv`](deepseek_v4_flash_all22.csv): both controls and all 22 GEO
   variants on DeepSeek-V4-Flash.
 - [`deepseek_v4_flash_mitigation.csv`](deepseek_v4_flash_mitigation.csv): L0--L5 averaged over
-  eight plausible synthetic archetypes and three targets.
+  eight realistic packages and three targets.
 - [`deepseek_v4_flash_sensitivity.csv`](deepseek_v4_flash_sensitivity.csv): source-position and
   packet-depth sensitivity.
 - [`paired_mechanism.csv`](paired_mechanism.csv): evidence, constraint-audit, and ranking-field

@@ -17,7 +17,7 @@ evaluate live retrieval, crawling, source selection, tool use, or UI presentatio
 The dataset supports two studies. The benchmark measures how far GEO attacks can move a
 flawed target into the user's decision set across a wide attack library. The mitigation
 study measures how much developer-side defenses reduce that effect on eight plausible
-synthetic GEO archetypes.
+realistic GEO packages.
 
 ## Composition
 
@@ -37,7 +37,7 @@ Each base case is expanded into 68 instances:
 This produces 40,800 instances in total (600 base cases times 68). The attack library is
 described in full in the [attack taxonomy](ATTACK_TAXONOMY.md): 7 primitives across 3
 manipulation loci (content, epistemic, model-facing), composed into 7 atomic, 3 block, 4
-block-combination, and 8 plausible synthetic archetypes. The value `realistic` remains in the
+block-combination, and 8 realistic packages. The package family is `realistic` throughout the
 released `package_family` column as a stable identifier; it does not claim that the family is
 representative of live-web attack prevalence.
 
@@ -140,10 +140,9 @@ performed two operations:
   byte-faithful round-trip.
 - **Request alignment.** Every visible `user_query` is the identifier-sanitized construction
   query. The exact check over 600 cases and 40,800 expanded rows is implemented in
-  `scripts/align_visible_queries.py`.
+  `scripts/audit_camera_ready_claims.py`.
 - **Reference terminology.** Public utility fields use `benchmark_reference_utility`. The
-  migration and zero-legacy-term check are implemented in
-  `scripts/migrate_reference_terminology.py`.
+  released data and scorers use this field directly.
 
 A tiny `sample/` subset (2 base cases per vertical) is derived by `scripts/build_sample.py`
 for offline smoke tests that need no GPU.
@@ -157,14 +156,14 @@ The dataset is intended for:
   recommendations relative to truthful controls.
 - Studying agent-side mitigations: measuring how developer-side defenses (defensive
   prompting, rationale emphasis, evidence breakdowns, context balancing, and instruction
-  filtering) reduce attack effectiveness on the plausible synthetic archetypes.
+  filtering) reduce attack effectiveness on the realistic packages.
 
 The dataset should not be used to develop or improve GEO attacks against deployed systems.
 Because the released artifact is canonicalized/de-identified and confined to consumer product recommendation, results
 should not be read as measurements of any specific real-world product, brand, or marketplace.
 
 The repository also publishes **SafeGEO Diamond**, a 600-instance, vertical-balanced screening
-split. Diamond deliberately uses the three archetypes with the highest DeepSeek-V4-Flash
+split. Diamond deliberately uses the three realistic packages with the highest DeepSeek-V4-Flash
 Target@3 values and therefore is a hard stress set, not an unbiased estimator of full-SafeGEO
 performance.
 
@@ -184,8 +183,8 @@ The dataset is released under the Creative Commons Attribution 4.0 International
   LLM reranking/generation; it is not an end-to-end deployed recommendation-agent benchmark.
 - The attack library is broad but not exhaustive; it captures the manipulation loci and
   primitives defined in the taxonomy rather than every conceivable GEO technique.
-- The mitigation study is a focused stress test (all three targets, the 8 plausible synthetic
-  archetypes, 14,400 instances per layer). It is not a complete factorial over all 22 attacks.
+- The mitigation study is a focused stress test (all three targets, the 8 realistic
+  packages, 14,400 instances per layer). It is not a complete factorial over all 22 attacks.
 - Quality judgments and line-level annotations are pipeline-generated. The 60-case human audit
   improves confidence but is not exhaustive, and utility ordering shows more disagreement than
   hard-requirement extraction.

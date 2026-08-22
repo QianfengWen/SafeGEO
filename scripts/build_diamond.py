@@ -2,7 +2,7 @@
 """Build the published SafeGEO Diamond screening subset.
 
 The subset uses a deterministic, vertical-stratified base-case sample and the
-three highest-Target@3 plausible archetypes on the held-out DeepSeek-V4-Flash
+three highest-Target@3 realistic packages on the held-out DeepSeek-V4-Flash
 robustness check.  It is intentionally a hard stress set, not an estimator of
 full-benchmark averages.
 """

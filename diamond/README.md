@@ -2,7 +2,7 @@
 
 SafeGEO Diamond is a fast, high-difficulty screening split with 600 expanded instances: 120
 base cases (20 per product vertical), hard-infeasible target A, the three most harmful plausible
-synthetic archetypes on DeepSeek-V4-Flash, and both controls (the unmodified source and the
+realistic packages on DeepSeek-V4-Flash, and both controls (the unmodified source and the
 truthful target-source rewrite).
 
 The selected attacks are `selective_comparison_note`, `false_fit_checklist`, and
@@ -11,7 +11,7 @@ vertical-stratified hash. The exact IDs and row counts are recorded in
 `selection_manifest.json`.
 
 Diamond is 68 times smaller than the 40,800-instance diagnostic benchmark and 26 times smaller
-than the 15,600-instance archetype evaluation. It supports rapid robustness screening and model
+than the 15,600-instance realistic-package evaluation. It supports rapid robustness screening and model
 iteration. Its attacks are selected for high attack success, so population-level reporting
 should use the complete benchmark.
 
