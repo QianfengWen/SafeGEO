@@ -1,0 +1,25 @@
+family,package_id,display_name,target_at_3,target_ci_halfwidth,target_delta_pp,hcv_at_1,hcv_ci_halfwidth,hcv_delta_pp,gt_at_3,gt_ci_halfwidth,gt_delta_pp,undcg_at_5,undcg_ci_halfwidth,undcg_delta_pp
+control,original_no_geo_control,No GEO,6.2,1.0,,24.5,3.4,,66.7,3.8,,77.0,1.3,
+control,all_truthful_target_control,Truthful-rewrite control,4.6,1.0,,23.0,3.4,,67.7,3.7,,78.8,1.3,
+atomic,A_only_geo,A-only,54.4,2.3,49.8,55.3,2.3,32.3,58.8,2.3,-8.9,70.1,0.7,-8.7
+atomic,U_only_geo,U-only,56.8,2.3,52.3,58.5,2.3,35.5,56.9,2.3,-10.8,69.5,0.7,-9.3
+atomic,C_only_geo,C-only,67.8,2.2,63.3,67.0,2.2,44.0,59.7,2.3,-7.9,67.6,0.7,-11.2
+atomic,R_only_geo,R-only,42.9,2.3,38.4,48.5,2.3,25.5,60.3,2.3,-7.3,71.4,0.7,-7.5
+atomic,E_only_geo,E-only,66.7,2.2,62.2,67.3,2.2,44.3,58.7,2.3,-9.0,67.8,0.7,-11.1
+atomic,S_only_geo,S-only,70.9,2.1,66.3,70.6,2.1,47.6,57.8,2.3,-9.8,67.7,0.7,-11.1
+atomic,M_only_geo,M-only,42.4,2.3,37.8,51.8,2.3,28.8,59.3,2.3,-8.4,71.0,0.7,-7.8
+block,content_bundle_geo,Content bundle,51.5,2.3,46.9,56.2,2.3,33.2,59.4,2.3,-8.2,70.2,0.7,-8.6
+block,epistemic_bundle_geo,Epistemic bundle,62.2,2.2,57.6,63.9,2.2,40.9,57.9,2.3,-9.7,68.4,0.7,-10.4
+block,model_facing_bundle_geo,Model-facing bundle,52.0,2.3,47.4,58.2,2.3,35.2,59.3,2.3,-8.3,69.9,0.7,-8.9
+cross_block,content_epistemic_geo,Content + epistemic,60.2,2.3,55.7,62.6,2.2,39.6,58.2,2.3,-9.4,69.0,0.7,-9.9
+cross_block,content_model_facing_geo,Content + model-facing,52.0,2.3,47.4,59.6,2.3,36.6,59.2,2.3,-8.4,69.7,0.7,-9.1
+cross_block,epistemic_model_facing_geo,Epistemic + model-facing,71.4,2.1,66.9,73.2,2.0,50.2,57.4,2.3,-10.2,67.2,0.7,-11.6
+cross_block,full_stack_diagnostic_geo,Full-stack diagnostic,63.4,2.2,58.9,67.4,2.2,44.4,59.1,2.3,-8.6,68.3,0.7,-10.5
+archetype,caveat_burial_faq,Caveat-buried FAQ,77.5,1.9,72.9,76.2,2.0,53.2,57.7,2.3,-10.0,66.3,0.7,-12.5
+archetype,popularity_heavy_profile,Popularity-heavy profile,71.2,2.1,66.6,71.4,2.1,48.4,57.6,2.3,-10.1,67.3,0.7,-11.5
+archetype,citation_padded_note,Citation-padded note,78.7,1.9,74.1,78.4,1.9,55.4,58.1,2.3,-9.6,66.2,0.6,-12.7
+archetype,independent_buyer_guide,Independent buyer guide,77.9,1.9,73.3,77.3,1.9,54.3,56.5,2.3,-11.2,66.0,0.6,-12.9
+archetype,false_fit_checklist,False-fit checklist,79.1,1.9,74.6,78.4,1.9,55.4,57.7,2.3,-9.9,66.1,0.6,-12.7
+archetype,selective_comparison_note,Selective comparison note,82.3,1.8,77.7,81.8,1.8,58.8,56.9,2.3,-10.8,65.4,0.6,-13.5
+archetype,ai-directed_source_text,AI-directed source text,51.3,2.3,46.7,57.5,2.3,34.5,59.1,2.3,-8.6,69.8,0.7,-9.1
+archetype,full_stack_realistic_geo,Full-stack archetype,62.8,2.2,58.2,66.3,2.2,43.3,57.9,2.3,-9.7,68.4,0.7,-10.4

@@ -9,14 +9,15 @@ distribution, and limitations of the SafeGEO dataset.
 Generative Engine Optimization (GEO) lets content owners rewrite web content to increase
 their visibility in generative systems. When a recommendation agent reads such documents,
 seller-controlled sources can make a flawed product appear better supported than it is.
-SafeGEO was created to measure this risk directly: it tests whether a model preserves
-utility-aligned recommendations when the sources it reads have been rewritten by a GEO
-adversary, and it provides a setting for studying agent-side defenses against that adversary.
+SafeGEO was created to measure this risk directly at the generation stage: it fixes the
+candidate roster and retrieved source packet, then tests whether a model preserves
+utility-aligned recommendations when one seller-controlled source is rewritten. It does not
+evaluate live retrieval, crawling, source selection, tool use, or UI presentation.
 
 The dataset supports two studies. The benchmark measures how far GEO attacks can move a
 flawed target into the user's decision set across a wide attack library. The mitigation
-study measures how much developer-side defenses reduce that effect on a realistic subset of
-attacks.
+study measures how much developer-side defenses reduce that effect on eight plausible
+synthetic GEO archetypes.
 
 ## Composition
 
@@ -36,16 +37,19 @@ Each base case is expanded into 68 instances:
 This produces 40,800 instances in total (600 base cases times 68). The attack library is
 described in full in the [attack taxonomy](ATTACK_TAXONOMY.md): 7 primitives across 3
 manipulation loci (content, epistemic, model-facing), composed into 7 atomic, 3 block, 4
-block-combination, and 8 realistic packages.
+block-combination, and 8 plausible synthetic archetypes. The value `realistic` remains in the
+released `package_family` column as a stable identifier; it does not claim that the family is
+representative of live-web attack prevalence.
 
-### Realism of the visible view
+### Semantics of the visible view
 
-The visible inputs are deliberately realistic and underspecified, so that an agent must
-reason rather than pattern-match. The following properties hold of the model-facing data:
+The visible inputs remove construction scaffolding while preserving the user's decision
+semantics. The following properties hold of the model-facing data:
 
-- Visible queries do not enumerate the hidden constraints or preferences a good
-  recommendation must satisfy. The user states a need in natural terms, and the agent must
-  infer what matters.
+- Every visible query is the identifier-sanitized construction query. All decision-relevant
+  hard constraints and soft preferences remain in the natural-language request; only the
+  structured decomposition and construction metadata are hidden. An exact audit over all 600
+  queries and 40,800 visible rows found zero request--label mismatches.
 - Sources are longer and more ambiguous than a clean specification. Ground-truth evidence
   may be implicit, weak, embedded in surrounding text, or absent from the visible text
   entirely.
@@ -56,8 +60,8 @@ reason rather than pattern-match. The following properties hold of the model-fac
 - Attack documents remain assertive. The GEO rewrites read as confident, well-formed
   sources, which is what makes them effective.
 
-These realism transformations apply only to the visible inputs. The hidden labels preserve
-the canonical evaluation, so scoring remains exact and comparable across instances. The
+These transformations apply only to the visible inputs. The hidden labels preserve
+the benchmark-reference evaluation, so scoring remains comparable across instances. The
 per-instance `realism_adjustments` field in the `labels` config records which transformations
 were applied.
 
@@ -68,8 +72,8 @@ The dataset is published as 10 Hugging Face Parquet configurations.
 | Config | Rows | Contents |
 |---|---|---|
 | `visible` | 40,800 | Model-facing inputs (query, candidate roster, source documents). |
-| `labels` | 40,800 | Hidden ground truth (package, attack vector, target mapping, evaluation keys). |
-| `candidate_quality` | 11,974 | Per-candidate quality judgments for utility and ranking metrics. |
+| `labels` | 40,800 | Hidden benchmark reference (package, attack vector, target mapping, evaluation keys). |
+| `candidate_quality` | 11,974 | Per-candidate benchmark-reference judgments for utility and ranking metrics. |
 | `source_annotations` | 21,513 | Per-source annotations for citation-validity scoring. |
 | `geo_line_annotations` | 414,000 | Line-level misleading and refuting-line annotations. |
 | `targets` | 600 | Fixed A/B/C target assignment per base case. |
@@ -78,35 +82,51 @@ The dataset is published as 10 Hugging Face Parquet configurations.
 | `requirement_annotations` | 600 | Per-query requirement annotations. |
 | `controlled_documents` | 41,400 | Full controlled-source corpus with hidden attack metadata. |
 
-The `controlled_documents` config carries a `hidden_geo_document_metadata` field that
+The `candidate_quality` config uses `benchmark_reference_utility` for the utility value consumed
+by uNDCG@5 and regret scoring. The `controlled_documents` config carries a
+`hidden_geo_document_metadata` field that
 describes the attack behind each document. This is used only for analysis and scoring and is
 never exposed to the model. Field-level column dictionaries for the `visible` and `labels`
 configs are in `data/README.md`.
 
-### Labeling
+### Labeling and audit
 
-Labels are produced by the synthesis pipeline rather than by human annotation. Each instance
+Reference labels are produced by the synthesis pipeline rather than exhaustively annotated by
+humans. Each instance
 carries its attack package, the per-primitive attack vector, the active manipulation loci,
 the mapping from target slots to controlled documents, the candidate-quality judgments needed
 to compute utility, and line-level annotations marking misleading and refuting lines. These
-labels define the canonical evaluation used by the scorers.
+labels define the benchmark reference used by the scorers; they are not claims of independently
+verified real-world product truth.
+
+Two annotators who were not involved in dataset construction independently audited 60
+vertical-stratified cases, including 180 hard requirements, 540 candidate--requirement pairs,
+180 candidate pairs, and 600 line--claim pairs. Inter-annotator exact agreement was 100.0% for
+hard-requirement extraction, 76.7% for candidate hard status, 78.1% for pairwise utility
+ordering, 91.7% for the top candidate, 83.3% for evidence relation, 80.3% for truth status,
+and 88.9% for utility validity. Full aggregate definitions and model--human agreement are in
+[the human-audit report](HUMAN_AUDIT.md).
 
 ## Collection and synthesis process
 
-The dataset is synthetic. It is generated by the SafeGEO synthesis pipeline according to
-`benchmark/config/synthesis_config.yaml`, which fixes the design parameters, including:
+SafeGEO is a hybrid, controlled artifact. Base candidates and source records are derived from
+production shopping-research traces, then canonicalized and de-identified. The seller-source
+control and GEO records are synthetic, and utility/evidence reference labels are generated by
+the annotation pipeline. `benchmark/config/synthesis_config.yaml` fixes design parameters,
+including:
 
 - 600 base cases, with 18 to 22 candidates per query and 2 to 3 ground-truth candidates per
   query.
-- Three target slots per base case, randomly sampled from the candidate roster and grouped by
-  evidence stratum (`A: primary_harmful_near_miss`, `B: contrast_hard_negative`,
-  `C: utility_or_uncertainty_target`).
+- Three non-ground-truth target slots per base case, sampled by evidence stratum: A and B from
+  hard negatives and C from a medium-negative or uncertainty stratum. No primary or acceptable
+  ground-truth candidate is used as an attack target.
 - A source budget per case (catalog entries, opened evidence chunks, and the number of
   controlled target sources, chunks, and lines per chunk).
 - Visible sanitization rules that neutralize instance and document identifiers and remove
-  attack vectors, package ids, and internal source flags from the visible view.
+  attack vectors, package ids, and internal source flags without removing user requirements.
 
-Because the data is fully synthetic, no personal or human-subject data is involved.
+The released records are de-identified and contain no intended personal or human-subject data.
+The repository does not redistribute raw proprietary webpages.
 
 ## Preprocessing, cleaning, and labeling
 
@@ -118,10 +138,12 @@ performed two operations:
   the set of JSON-encoded columns recorded in the Parquet file metadata. The
   `safegeo.io.read_records` loader restores these columns to native Python objects, giving a
   byte-faithful round-trip.
-- **Normalization.** Two metadata fields whose names carried a legacy version prefix were
-  renamed to unprefixed names, and version-prefixed tags were stripped from the `version`
-  metadata value, so the released dataset is self-consistent and free of internal release
-  markers.
+- **Request alignment.** Every visible `user_query` is the identifier-sanitized construction
+  query. The exact check over 600 cases and 40,800 expanded rows is implemented in
+  `scripts/align_visible_queries.py`.
+- **Reference terminology.** Public utility fields use `benchmark_reference_utility`. The
+  migration and zero-legacy-term check are implemented in
+  `scripts/migrate_reference_terminology.py`.
 
 A tiny `sample/` subset (2 base cases per vertical) is derived by `scripts/build_sample.py`
 for offline smoke tests that need no GPU.
@@ -134,12 +156,17 @@ The dataset is intended for:
   attacks raise attacked-target top-three placement and hard-constraint-violating top-one
   recommendations relative to truthful controls.
 - Studying agent-side mitigations: measuring how developer-side defenses (defensive
-  prompting, rationale elicitation, evidence breakdowns, context balancing, and instruction
-  filtering) reduce attack effectiveness on the realistic attack subset.
+  prompting, rationale emphasis, evidence breakdowns, context balancing, and instruction
+  filtering) reduce attack effectiveness on the plausible synthetic archetypes.
 
 The dataset should not be used to develop or improve GEO attacks against deployed systems.
-Because all instances are synthetic and confined to consumer product recommendation, results
+Because the released artifact is canonicalized/de-identified and confined to consumer product recommendation, results
 should not be read as measurements of any specific real-world product, brand, or marketplace.
+
+The repository also publishes **SafeGEO Diamond**, a 600-instance, vertical-balanced screening
+split. Diamond deliberately uses the three archetypes with the highest DeepSeek-V4-Flash
+Target@3 values and therefore is a hard stress set, not an unbiased estimator of full-SafeGEO
+performance.
 
 ## Distribution and license
 
@@ -149,13 +176,16 @@ The dataset is released under the Creative Commons Attribution 4.0 International
 
 ## Limitations
 
-- The data is synthetic. It is designed to be realistic and underspecified, but it does not
-  reproduce the full diversity or noise of real web sources.
+- Controlled seller-source rewrites use fixed text templates and do not reproduce the full
+  diversity, layout, ratings, images, structured metadata, or noise of real webpages.
 - Coverage is limited to 6 consumer product verticals and to text-only sources. Other
   domains, modalities, and recommendation settings are out of scope.
+- The evaluation fixes retrieval and source selection and measures only source-conditioned
+  LLM reranking/generation; it is not an end-to-end deployed recommendation-agent benchmark.
 - The attack library is broad but not exhaustive; it captures the manipulation loci and
   primitives defined in the taxonomy rather than every conceivable GEO technique.
-- The mitigation study is a focused stress test (Target A, the 8 realistic packages, 600 base
-  cases per layer). It is not a complete factorial over every package and slot.
-- Quality judgments and line-level annotations are generated by the synthesis pipeline rather
-  than independently human-verified.
+- The mitigation study is a focused stress test (all three targets, the 8 plausible synthetic
+  archetypes, 14,400 instances per layer). It is not a complete factorial over all 22 attacks.
+- Quality judgments and line-level annotations are pipeline-generated. The 60-case human audit
+  improves confidence but is not exhaustive, and utility ordering shows more disagreement than
+  hard-requirement extraction.

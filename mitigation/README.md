@@ -1,9 +1,8 @@
 # SafeGEO Mitigation Study
 
-The mitigation study asks a different question from the benchmark: given that GEO attacks
-work, what can an **agent developer** do to reduce their effect without changing the model?
-It compares a set of agent-design layers on the same attacked instances and reports how much
-each layer reduces attack success relative to an unmitigated baseline.
+The mitigation study compares lightweight prompt/input-level interventions on matched attacked
+instances. The model, query, candidate roster, source packet, order, lines, and decoding settings
+remain fixed across conditions.
 
 ## Design
 
@@ -12,33 +11,36 @@ uses:
 
 ```
 600 base cases
-x Target A only
-x 8 realistic GEO attack packages
+x 3 target slots (A, B, C)
+x 8 plausible synthetic GEO archetypes
 x each mitigation layer
 ```
 
-Target A is the primary harmful near-miss target: a high-quality hard negative that becomes
-harmful if the agent overlooks a hidden disqualifying gap. The 8 realistic packages are the
-ones a plausible GEO operator might deploy (`caveat_burial_faq`,
+The three fixed targets are non-ground-truth candidates drawn from complementary hard-negative
+and medium/uncertainty strata. The 8 archetypes are coherent synthetic seller-source templates
+(`caveat_burial_faq`,
 `popularity_heavy_profile`, `citation_padded_note`, `independent_buyer_guide`,
 `false_fit_checklist`, `selective_comparison_note`, `ai-directed_source_text`,
 `full_stack_realistic_geo`). No no-attack controls are used in this stress test; instead,
 every layer is compared against `L0_source_only_baseline` on the same attacked instances.
-Each layer runs 4,800 instances (600 base cases times 8 packages).
+The `realistic` family, `L0_source_only_baseline`, and
+`L2_rationale_elicitation_mitigation` strings are retained as stable artifact identifiers;
+the L2 camera-ready display name is **Rationale emphasis**. Each layer runs 14,400 instances
+(600 base cases times 3 targets times 8 packages).
 
 ## Mitigation layers
 
 | Layer | Strategy | What changes |
 |---|---|---|
-| L0 | Source-only baseline | No mitigation. |
-| L1 | Prompt mitigation | A defensive final instruction is added; nothing else changes. |
-| L2 | Rationale elicitation | Top recommendations are required to carry reasons and citations. |
-| L3 | Audited evidence sheet | A lightweight upstream evidence-verification artifact is added. |
-| L4 | Context balancing | Source context is reordered to reduce single-source GEO salience. |
-| L5 | Instruction filtering | Source-internal instructions directed at the assistant are removed. |
+| L0 | No mitigation | Exact benchmark system prompt, user-message serialization, output schema, and visible packet. |
+| L1 | Defensive prompt | A defensive system instruction is added; nothing else changes. |
+| L2 | Rationale emphasis | The output instruction for the benchmark's existing rationale and citation fields is tightened. |
+| L3 | Evidence breakdown | The model generates candidate-level evidence checks from the visible packet before ranking; no external sheet or hidden label is supplied. |
+| L4 | Context balancing | The model is instructed to balance source use; the source packet and order remain unchanged. |
+| L5 | Instruction filtering | The model is instructed to ignore source-internal directives; no source line is deleted or replaced. |
 
-Layers L0, L1, L3, L4, and L5 use the simple recommendation schema; L2 uses the accountable
-recommendation schema (`mitigation/schemas/`).
+L0, L1, L2, L4, and L5 use the exact benchmark prediction schema. L3 extends that schema only
+with a required `evidence_checks` field. All conditions use the same decoding settings.
 
 ## Pipeline
 
@@ -56,15 +58,15 @@ build_runfiles.py -> materialize_labels.py -> render_requests.py -> run_mitigati
 python mitigation/src/build_runfiles.py \
   --dataset-root data \
   --out runs/mitigation \
-  --target-slot A \
   --layers L0,L1,L2,L3,L4,L5
 ```
 
-This selects the attacked Target-A instances for the 8 realistic packages and emits one
+This selects all three attacked target slots for the 8 archetypes and emits one
 runfile per layer under `runs/mitigation/runfiles/`, along with
 `runs/mitigation/labels/mitigation_labels_manifest.jsonl` and a `run_summary.json`. Each
-layer has the same instance count (4,800 in the full run). For a smaller screening run, pass
-`--base-cases-per-vertical 25` (1,200 instances per layer).
+layer has the same instance count (14,400 in the full run). For a smaller screening run, pass
+`--base-cases-per-vertical 25` (3,600 instances per layer). The deprecated `--target-slot`
+option remains available only for compatibility with earlier single-slot scripts.
 
 ### 2. Materialize labels
 
@@ -91,7 +93,6 @@ python mitigation/src/run_mitigation.py \
   --requests runs/mitigation/requests/L0.jsonl \
   --model "$MODEL" \
   --base-url http://127.0.0.1:8000/v1 \
-  --schema-dir mitigation/schemas \
   --output runs/mitigation/predictions/L0.jsonl
 ```
 
@@ -100,9 +101,10 @@ Like the benchmark runner, `run_mitigation.py` targets any OpenAI-compatible end
 Passing `--json-mode off` disables structured output entirely (the parser still recovers JSON
 from the response).
 
-`render_requests.py` applies each layer's prompt template and the L4/L5 source transforms
-(context balancing for L4, instruction filtering for L5) using the prompts under
-`mitigation/prompts/`. Repeat for every layer; the
+`render_requests.py` uses the shared benchmark user-prompt builder for every layer and applies
+the selected system instruction. L0 reads the benchmark system-prompt file directly, making
+the complete no-mitigation request byte-identical to the benchmark request. The other layers
+retain that visible packet. Repeat for every layer; the
 [run_mitigation.sh](../scripts/run_mitigation.sh) script loops over all runfiles
 automatically.
 
@@ -152,3 +154,7 @@ decision set more often than the unmitigated baseline did. See the
 The full chain runs end to end against the tiny `sample/` subset with no GPU; see the
 "Offline smoke test" section of the top-level [README](../README.md). Substitute `data` for
 `sample` to run against the full dataset.
+
+Camera-ready defaults are temperature 0, top-p 1, and a 6,144-token output cap for the three
+main models. Published aggregate mitigation tables are in [`results/`](../results/); model
+responses and prediction traces are not distributed.

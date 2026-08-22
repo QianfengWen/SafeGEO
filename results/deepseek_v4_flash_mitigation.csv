@@ -1,0 +1,7 @@
+layer,display_name,target_at_3,target_delta_vs_l0_pp,hcv_at_1,hcv_delta_vs_l0_pp,gt_at_3,gt_delta_vs_l0_pp,undcg_at_5,undcg_delta_vs_l0_pp
+L0,No mitigation,72.6,0.0,73.4,0.0,57.7,0.0,66.9,0.0
+L1,Defensive prompt,68.2,-4.4,69.0,-4.4,56.9,-0.8,67.4,0.5
+L2,Rationale emphasis,72.5,-0.1,73.3,-0.1,55.6,-2.1,56.7,-10.2
+L3,Evidence breakdown,46.8,-25.8,54.8,-18.6,51.4,-6.3,66.0,-0.9
+L4,Context balancing,62.9,-9.7,65.6,-7.8,57.2,-0.5,69.0,2.1
+L5,Instruction filtering,70.2,-2.4,70.9,-2.5,57.0,-0.7,67.1,0.2

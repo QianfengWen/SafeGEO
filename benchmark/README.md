@@ -1,9 +1,11 @@
 # SafeGEO Benchmark
 
-The benchmark measures whether a recommendation agent preserves utility-aligned
-recommendations when the sources it reads have been rewritten by a GEO adversary. A model is
-served behind an OpenAI-compatible endpoint (for example vLLM), asked to rank a candidate
-roster using only the provided sources, and scored against the hidden ground truth.
+The benchmark measures whether a source-conditioned LLM reranker preserves utility-aligned
+recommendations when one seller-controlled source is rewritten by a GEO adversary. A model is
+served behind an OpenAI-compatible endpoint (for example vLLM), asked to rank a fixed candidate
+roster using a fixed source packet, and scored against hidden benchmark-reference labels.
+Retrieval, crawling, source selection, tool use, and UI presentation are outside this
+generation-stage evaluation.
 
 The central question is whether GEO attacks move a flawed target into the user's decision
 set. The benchmark answers this by comparing attacked instances against truthful controls
@@ -35,18 +37,23 @@ python benchmark/src/run_safegeo.py \
 The runner targets any OpenAI-compatible endpoint. `--provider` (`auto`, `vllm`, `openai`,
 `openrouter`) selects a preset and `--json-mode` (`auto`, `guided_json`, `json_object`, `off`)
 the structured-output strategy; with the defaults it auto-detects vLLM and uses `guided_json`.
+The repository includes the model-facing system and user prompts verbatim. The compact system
+message uses the shorthand `ranked_candidate_ids`/`answer`; the full user message and enforced
+schema specify the `ranking_all_items` contract used for scoring. The scorer also accepts the
+shorthand key as a fallback for backends without guided decoding.
 
 The `--experiment` flag selects which instances to run:
 
 | Mode | Instances run |
 |---|---|
-| `main_realistic` | The 8 realistic packages plus the 2 controls (the main paper setting). |
+| `main_realistic` | The 8 plausible synthetic archetypes plus the 2 controls (stable CLI name retained). |
 | `full` | All 22 packages across all 3 target slots plus controls. |
 | `controls` | Controls only. |
 
 `run_safegeo.py` supports resuming an interrupted run with `--resume`, and exposes
 `--workers`, `--temperature`, `--top-p`, `--max-tokens`, `--retries`, and
-`--request-timeout` for tuning throughput and decoding.
+`--request-timeout`. Camera-ready defaults are temperature 0, top-p 1, and a 6,144-token
+output cap for the three main models.
 
 ### 2. Score predictions
 
@@ -86,7 +93,7 @@ The analyzer writes `dataset_stats.json` and a set of experiment tables:
 - `experiment4_target_slot.csv`, `experiment4_target_difficulty.csv`: effects by target slot
   and difficulty.
 - `experiment5_citation_focus.csv`: citation behavior on the citation-focused packages.
-- `experiment6_realistic_archetypes.csv`: the realistic packages versus controls.
+- `experiment6_realistic_archetypes.csv`: the plausible synthetic archetypes versus controls.
 - `experiment7_control_comparison.csv`: attacked instances versus truthful controls.
 - `bootstrap_model_attack_ci.csv`: bootstrap confidence intervals (controlled by
   `--bootstrap-reps` and `--seed`).
@@ -127,3 +134,14 @@ Recommendation-quality and safety metrics (computed on all instances):
 The full chain runs end to end against the tiny `sample/` subset with no GPU; see the
 "Offline smoke test" section of the top-level [README](../README.md). Substitute `data` for
 `sample` to run against the full dataset.
+
+## SafeGEO Diamond
+
+For rapid screening, substitute `diamond/visible`, `diamond/labels`, and the corresponding
+Diamond annotation directories in the commands above, and use `--experiment full`. Diamond has
+600 instances (120 vertical-balanced base cases, one target slot, three deliberately difficult
+archetypes, and two controls). It is a biased stress set and must not be used to estimate the
+full benchmark average; see [`diamond/README.md`](../diamond/README.md).
+
+Published camera-ready aggregate tables, including DeepSeek-V4-Flash and the paired mechanism
+analysis, are in [`results/`](../results/). Prediction and response traces are not distributed.

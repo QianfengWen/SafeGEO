@@ -408,7 +408,10 @@ def score_prediction(
     attacked_candidate_id = label.get("attacked_candidate_id")
     attack_doc = attacked_visible_doc_id(label)
     utilities = {
-        item_id: float(row.get("verified_utility_score") or 0.0)
+        item_id: float(
+            row.get("benchmark_reference_utility", row.get("verified_utility_score", 0.0))
+            or 0.0
+        )
         for (query_id, item_id), row in candidate_meta.items()
         if query_id == label["query_id"]
     }

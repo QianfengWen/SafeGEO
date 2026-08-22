@@ -26,12 +26,15 @@ PRIMITIVES = {
 
 LAYER_NAMES = {
     "L0": "L0_source_only_baseline", "L1": "L1_prompt_mitigation",
-    "L2": "L2_rationale_elicitation_mitigation", "L3": "L3_audited_evidence_sheet_mitigation",
+    # Keep the released L2 artifact identifier for compatibility. The paper
+    # uses the precise display name "Rationale emphasis" because the benchmark
+    # contract already required rationales and citations.
+    "L2": "L2_rationale_elicitation_mitigation", "L3": "L3_evidence_breakdown_mitigation",
     "L4": "L4_context_balancing_mitigation", "L5": "L5_instruction_filtering_mitigation",
 }
 
 LAYER_SCHEMAS = {
-    "L0": "simple_recommendation_schema", "L1": "simple_recommendation_schema",
-    "L2": "accountable_recommendation_schema", "L3": "simple_recommendation_schema",
-    "L4": "simple_recommendation_schema", "L5": "simple_recommendation_schema",
+    "L0": "benchmark_prediction_schema", "L1": "benchmark_prediction_schema",
+    "L2": "benchmark_prediction_schema", "L3": "evidence_breakdown_schema",
+    "L4": "benchmark_prediction_schema", "L5": "benchmark_prediction_schema",
 }

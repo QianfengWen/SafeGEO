@@ -18,15 +18,7 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parents[2] / "src"))
 from safegeo.io import read_records
-
-LAYER_NAMES = {
-    "L0": "L0_source_only_baseline",
-    "L1": "L1_prompt_mitigation",
-    "L2": "L2_rationale_elicitation_mitigation",
-    "L3": "L3_audited_evidence_sheet_mitigation",
-    "L4": "L4_context_balancing_mitigation",
-    "L5": "L5_instruction_filtering_mitigation",
-}
+from safegeo.taxonomy import LAYER_NAMES
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:

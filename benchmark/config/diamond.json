@@ -1,0 +1,34 @@
+{
+  "name": "SafeGEO Diamond",
+  "version": "1.0",
+  "purpose": "Fast, vertical-balanced, difficulty-enriched screening; use the full benchmark for population-level estimates.",
+  "selection_seed": "safegeo-diamond-v1",
+  "base_cases_per_vertical": 20,
+  "target_slots": ["A"],
+  "attack_packages": [
+    "selective_comparison_note",
+    "false_fit_checklist",
+    "citation_padded_note"
+  ],
+  "controls": [
+    "original_no_geo_control",
+    "all_truthful_target_control"
+  ],
+  "package_selection_basis": {
+    "model": "DeepSeek-V4-Flash",
+    "metric": "Target@3",
+    "scope": "eight plausible synthetic GEO archetypes",
+    "values_percent": {
+      "selective_comparison_note": 82.3,
+      "false_fit_checklist": 79.1,
+      "citation_padded_note": 78.7
+    }
+  },
+  "expected_counts": {
+    "base_cases": 120,
+    "instances_per_base_case": 5,
+    "visible_instances": 600,
+    "size_ratio_vs_full_40800": 68.0,
+    "size_ratio_vs_main_15600": 26.0
+  }
+}

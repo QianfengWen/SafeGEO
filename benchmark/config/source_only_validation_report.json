@@ -1,6 +1,7 @@
 {
   "visible_rows": 40800,
   "label_rows": 40800,
+  "unique_base_queries": 600,
   "vertical_counts": {
     "ai_meeting_transcription": 6800,
     "baby_monitor": 6800,
@@ -9,31 +10,12 @@
     "noise_canceling_headphones": 6800,
     "office_chair": 6800
   },
-  "visible_leakage_checks": {
-    "ai_meeting_transcription": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    },
-    "baby_monitor": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    },
-    "carry_on_backpack": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    },
-    "home_air_purifier": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    },
-    "noise_canceling_headphones": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    },
-    "office_chair": {
-      "explicit_requirement_terms_in_query_rows": 0,
-      "removed_scaffolding_field_occurrences": 0
-    }
+  "query_semantics_audit": {
+    "comparison": "exact serialized user_query versus the identifier-sanitized construction query",
+    "matched_queries": 600,
+    "mismatched_queries": 0,
+    "matched_visible_rows": 40800,
+    "mismatched_visible_rows": 0
   },
   "avg_sources": {
     "ai_meeting_transcription": 22.0,

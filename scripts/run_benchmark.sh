@@ -8,10 +8,25 @@ PROVIDER="${PROVIDER:-vllm}"
 JSON_MODE="${JSON_MODE:-auto}"
 EXPERIMENT="${EXPERIMENT:-main_realistic}"   # main_realistic | full | controls
 OUT="${OUT:-runs/benchmark}"
+TEMPERATURE="${TEMPERATURE:-0}"
+TOP_P="${TOP_P:-1}"
+MAX_TOKENS="${MAX_TOKENS:-6144}"
 mkdir -p "$OUT"
-python benchmark/src/run_safegeo.py --visible data/visible --labels data/labels \
-  --experiment "$EXPERIMENT" --model "$MODEL" --provider "$PROVIDER" --json-mode "$JSON_MODE" \
-  ${BASE_URL:+--base-url "$BASE_URL"} ${API_KEY:+--api-key "$API_KEY"} --output "$OUT/predictions.jsonl"
+runner_args=(
+  --visible data/visible
+  --labels data/labels
+  --experiment "$EXPERIMENT"
+  --model "$MODEL"
+  --provider "$PROVIDER"
+  --json-mode "$JSON_MODE"
+  --temperature "$TEMPERATURE"
+  --top-p "$TOP_P"
+  --max-tokens "$MAX_TOKENS"
+  --output "$OUT/predictions.jsonl"
+)
+if [[ -n "${BASE_URL:-}" ]]; then runner_args+=(--base-url "$BASE_URL"); fi
+if [[ -n "${API_KEY:-}" ]]; then runner_args+=(--api-key "$API_KEY"); fi
+python benchmark/src/run_safegeo.py "${runner_args[@]}"
 python benchmark/src/score_safegeo.py --predictions "$OUT/predictions.jsonl" --labels data/labels \
   --candidate-quality data/candidate_quality --source-annotations data/source_annotations \
   --geo-line-annotations data/geo_line_annotations --out-dir "$OUT/scored"

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from pathlib import Path
@@ -108,7 +109,70 @@ def is_schema_like(obj: dict[str, Any] | None) -> bool:
     )
 
 
-def load_schema(schema_dir: Path, schema_id: str) -> dict[str, Any]:
+def load_schema(schema_dir: Path | None, schema_id: str) -> dict[str, Any]:
+    repo_root = Path(__file__).resolve().parents[2]
+    if schema_id in {"benchmark_prediction_schema", "evidence_breakdown_schema"}:
+        base_path = repo_root / "benchmark" / "prompts" / "prediction_schema.json"
+        schema = json.loads(base_path.read_text(encoding="utf-8"))
+        if schema_id == "benchmark_prediction_schema":
+            return schema
+        schema = copy.deepcopy(schema)
+        evidence_checks = {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": [
+                    "candidate_id",
+                    "claim_or_issue",
+                    "inferred_requirement_or_property",
+                    "status",
+                    "citations",
+                ],
+                "properties": {
+                    "candidate_id": {"type": "string"},
+                    "claim_or_issue": {"type": "string"},
+                    "inferred_requirement_or_property": {"type": "string"},
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "supported",
+                            "conflicting_or_refuted",
+                            "unverified_or_missing",
+                            "needs_verification",
+                        ],
+                    },
+                    "citations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "required": ["doc_id", "line_ids"],
+                            "properties": {
+                                "doc_id": {"type": "string"},
+                                "line_ids": {
+                                    "type": "array",
+                                    "items": {"type": "integer"},
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+        # Put the self-generated checks first. Guided decoders commonly follow
+        # schema property order, so this makes the intended check-then-rank
+        # sequence structural while preserving every benchmark output field.
+        schema["required"] = ["evidence_checks", *schema["required"]]
+        schema["properties"] = {
+            "evidence_checks": evidence_checks,
+            **schema["properties"],
+        }
+        return schema
+    if schema_dir is None:
+        raise FileNotFoundError(
+            f"No schema directory was supplied for custom schema {schema_id}"
+        )
     path = schema_dir / f"{schema_id}.json"
     if not path.exists():
         raise FileNotFoundError(f"Missing schema for {schema_id}: {path}")
@@ -134,7 +198,11 @@ def run_one(
         {"role": "system", "content": row["system_prompt"]},
         {"role": "user", "content": row["user_prompt"]},
     ]
-    schema = load_schema(schema_dir, str(row["output_schema_id"])) if (mode == "guided_json" and schema_dir is not None) else None
+    schema = (
+        load_schema(schema_dir, str(row["output_schema_id"]))
+        if mode == "guided_json"
+        else None
+    )
     struct = structured_kwargs(mode, schema)
 
     for attempt in range(1, retries + 2):
@@ -186,10 +254,15 @@ def main() -> None:
     parser.add_argument("--api-key", default=None)
     parser.add_argument("--provider", choices=["auto", "vllm", "openai", "openrouter"], default="auto")
     parser.add_argument("--json-mode", choices=["auto", "guided_json", "json_object", "off"], default="auto")
-    parser.add_argument("--schema-dir", type=Path, default=Path("schemas"))
+    parser.add_argument(
+        "--schema-dir",
+        type=Path,
+        default=None,
+        help="Optional directory for custom schemas; built-in L0--L5 schemas reuse the benchmark schema directly.",
+    )
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
-    parser.add_argument("--max-tokens", type=int, default=4096)
+    parser.add_argument("--max-tokens", type=int, default=6144)
     parser.add_argument("--request-timeout", type=float, default=900.0)
     parser.add_argument("--retries", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1)

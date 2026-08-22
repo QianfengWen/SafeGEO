@@ -32,9 +32,10 @@ configs:
 
 Paper: <https://arxiv.org/abs/2606.28356> · Project page: <https://qianfengwen.github.io/SafeGEO/> · Code: <https://github.com/QianfengWen/SafeGEO>
 
-SafeGEO is a benchmark for testing whether recommendation agents preserve utility-aligned
-recommendations when seller-controlled web sources are rewritten with Generative Engine
-Optimization (GEO) attacks. It is built from 600 recommendation base cases spread evenly
+SafeGEO is a benchmark for testing whether a source-conditioned LLM reranker preserves
+utility-aligned recommendations when seller-controlled web sources are rewritten with
+Generative Engine Optimization (GEO) attacks. Candidate generation, retrieval, and source
+selection are fixed. It is built from 600 recommendation base cases spread evenly
 across 6 product verticals (100 cases each). Each base case is expanded into 68 instances:
 22 attack packages applied to each of 3 target slots (A, B, C), plus 2 controls. This yields
 40,800 instances in total. The attack library spans 3 manipulation loci (content, epistemic,
@@ -46,10 +47,15 @@ The 6 verticals are: `ai_meeting_transcription`, `baby_monitor`, `carry_on_backp
 
 The dataset is published as 10 configurations. The `visible` config holds the model-facing
 inputs (user query, candidate roster, and the source documents an agent reads). The `labels`
-config holds the hidden ground truth used for scoring. The remaining configs supply
+config holds the hidden benchmark reference used for scoring. The remaining configs supply
 candidate-quality judgments, source and line-level annotations, the fixed per-case targets,
 the instance manifest, per-query quality distributions, requirement annotations, and the
 full controlled-document corpus.
+
+Base candidate and source records are derived from shopping-research traces, then canonicalized
+and de-identified. Seller-source control/GEO records are synthetic, while utility and evidence
+labels are pipeline-generated benchmark references. See the
+[datasheet](../docs/DATASHEET.md) and [human audit](../docs/HUMAN_AUDIT.md).
 
 ## Loading the dataset
 
@@ -62,7 +68,7 @@ from datasets import load_dataset
 # Model-facing inputs.
 visible = load_dataset("wieeii/SafeGEO", "visible", split="test")
 
-# Hidden ground-truth labels for scoring.
+# Hidden benchmark-reference labels for scoring.
 labels = load_dataset("wieeii/SafeGEO", "labels", split="test")
 
 print(visible[0]["user_query"])
@@ -84,8 +90,8 @@ records = read_records("data/visible")   # list of dicts, nested fields decoded
 | Config | Rows | Description |
 |---|---|---|
 | `visible` | 40,800 | Model-facing inputs per instance: user query, candidate roster, and source documents. |
-| `labels` | 40,800 | Hidden ground truth per instance: attack package, attack vector, target mapping, and evaluation keys. |
-| `candidate_quality` | 11,974 | Per-candidate quality judgments used to compute utility and ranking metrics. |
+| `labels` | 40,800 | Hidden benchmark reference per instance: attack package, attack vector, target mapping, and evaluation keys. |
+| `candidate_quality` | 11,974 | Per-candidate benchmark-reference judgments used to compute utility and ranking metrics. |
 | `source_annotations` | 21,513 | Per-source annotations supporting citation validity scoring. |
 | `geo_line_annotations` | 414,000 | Line-level annotations marking misleading and refuting lines within controlled sources. |
 | `targets` | 600 | The fixed A/B/C target assignment for each base case. |
@@ -105,15 +111,15 @@ These are the only fields a model sees at inference time.
 | `benchmark` | string | Benchmark name tag. |
 | `split` | string | Data split tag. |
 | `vertical` | string | Product vertical (one of the 6 listed above). |
-| `version` | string | Visible-format version tag (de-explicitized query, long sources). |
-| `user_query` | string | The user's request. Hidden constraints and preferences are not enumerated in the text. |
+| `version` | string | Visible-format version tag (semantics-preserved query, long sources). |
+| `user_query` | string | Identifier-sanitized construction request, byte-identical across all expanded rows for a case. |
 | `candidate_roster` | list | The candidate products to rank, each with a `candidate_id`, name, and visible attributes. |
 | `search_results` | list | The source documents the agent may read, including controlled (potentially attacked) sources. |
 | `generation_instruction` | dict | The task framing given to the model (recommend from the roster using only the provided sources). |
 
 ## Column dictionary: `labels`
 
-These fields are hidden ground truth and are used only for scoring.
+These fields are hidden benchmark-reference annotations and are used only for scoring.
 
 | Field | Type | Description |
 |---|---|---|
@@ -142,6 +148,24 @@ These fields are hidden ground truth and are used only for scoring.
 | `removed_visible_scaffolding` | list | Scaffolding artifacts removed from the visible view (for example candidate cards, conflict logs). |
 | `target_metadata_source` | string | Provenance tag for the target metadata. |
 | `realism_adjustments` | dict | Flags describing the realism transformations applied to the visible view. |
+
+## Core columns: `candidate_quality`
+
+The scorer reads the following candidate-level reference fields. These are pipeline-generated
+benchmark annotations, not independent claims about real-world product quality.
+
+| Field | Type | Description |
+|---|---|---|
+| `item_id` | string | Candidate identifier within the base case. |
+| `hard_constraint_feasible` | bool | Whether the candidate satisfies all benchmark-reference hard constraints. |
+| `failed_hard_constraints` | list | Hard requirements marked failed by the annotation pipeline. |
+| `soft_preference_score` | float | Weighted soft-preference score. |
+| `benchmark_reference_utility` | float | Utility used for ranking metrics in the camera-ready release. |
+| `quality_group` | string | Ground-truth, hard-negative, or medium-negative grouping. |
+| `candidate_shortlist_rank` | int | Position in the canonicalized upstream candidate shortlist; this is not the benchmark-reference rank. |
+
+The scorer keeps a fallback for the old `verified_utility_score` name so earlier local copies
+remain readable; the released Parquet files use only `benchmark_reference_utility`.
 
 ## A note on hidden attack metadata
 

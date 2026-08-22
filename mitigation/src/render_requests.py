@@ -11,25 +11,14 @@ import argparse, json
 from pathlib import Path
 from typing import Dict, Any
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[2] / "src"))
+from safegeo.prompts import build_recommendation_user_prompt
+
 
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
-
-
-def fmt_json(obj: Any) -> str:
-    return json.dumps(obj, ensure_ascii=False, indent=2)
-
-
-def render_user(template: str, visible: Dict[str, Any]) -> str:
-    audited = ""
-    if "audited_evidence_sheet" in visible:
-        audited = "\n# Audited evidence sheet\n\n" + fmt_json(visible["audited_evidence_sheet"])
-    return (template
-        .replace("{{user_query}}", str(visible.get("user_query", "")))
-        .replace("{{candidate_roster_json}}", fmt_json(visible.get("candidate_roster", [])))
-        .replace("{{search_results_json}}", fmt_json(visible.get("search_results", [])))
-        .replace("{{audited_evidence_sheet_section}}", audited)
-    )
 
 
 def main() -> None:
@@ -40,7 +29,6 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
 
-    user_template = read(args.package_root / "prompts" / "user_template.md")
     prompt_cache: Dict[str, str] = {}
     n = 0
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -60,7 +48,10 @@ def main() -> None:
                 "layer_name": row["layer_name"],
                 "output_schema_id": row["output_schema_id"],
                 "system_prompt": prompt_cache[prompt_file],
-                "user_prompt": render_user(user_template, visible),
+                # The user message is byte-for-byte the benchmark request for
+                # the same visible row.  Layer differences live only in the
+                # system prompt (and L3's evidence-check output schema).
+                "user_prompt": build_recommendation_user_prompt(visible),
             }
             out.write(json.dumps(req, ensure_ascii=False) + "\n")
             n += 1

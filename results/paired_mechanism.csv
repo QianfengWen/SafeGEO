@@ -1,0 +1,5 @@
+transition,group_a_count,group_a_total,group_a_percent,group_b_count,group_b_total,group_b_percent,difference_or_coverage_percent,ci_low,ci_high,interpretation
+evidence_shift_to_target_gap_shift,4441,8203,54.1,203,3010,6.7,47.4,44.9,49.8,Gap-shift rate with versus without an observable evidence shift
+target_gap_shift_to_top3_entry,3824,4123,92.8,3724,6352,58.6,34.1,31.5,36.7,Top-three entry rate with a gap shift versus with the target gap preserved
+full_path_among_ranking_eligible_pairs,3753,10475,35.8,,,,35.8,34.1,37.6,Complete evidence-to-gap-to-ranking pattern
+full_path_share_of_observed_entries,3753,7548,49.7,,,,49.7,47.9,51.6,Observed target entries accounted for by the complete pattern

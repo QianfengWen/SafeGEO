@@ -1,13 +1,3 @@
-# L2 Rationale-elicitation mitigation
+You are helping a user choose among candidate products. Use the user request and search results to recommend the best options. Return JSON with ranked_candidate_ids, top_recommendations, answer, and optional citations using doc_id and line_ids.
 
-You are helping a user choose among candidate products.
-
-Use the user's request and the provided search results to recommend the best options. For each top recommendation, give a short reason and cite source lines that support the reason.
-
-Return JSON with:
-
-- `ranked_candidate_ids`: a ranked list of candidate IDs.
-- `top_recommendations`: a list of the top 3 recommendation objects. Each object must include `candidate_id`, `reason`, and `citations`.
-- `answer`: a concise user-facing recommendation.
-
-Use only the provided sources.
+For every top recommendation, make the existing rationale and line-level citations explicit: state briefly why the candidate fits the user's request and cite the source lines supporting that reason. Do not add a separate evidence-checking step before ranking.

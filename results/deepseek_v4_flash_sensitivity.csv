@@ -1,0 +1,7 @@
+category,setting,target_at_3,hcv_at_1,gt_at_3,undcg_at_5
+original,K=Full,72.6,73.4,57.7,66.9
+source_position,forced_first,75.9,73.7,59.1,66.9
+source_position,forced_middle,61.2,64.8,62.4,69.9
+source_position,forced_last,58.4,63.3,62.8,70.1
+retrieval_depth,K=10,77.2,74.5,69.5,71.6
+retrieval_depth,K=5,99.3,91.7,46.5,48.9

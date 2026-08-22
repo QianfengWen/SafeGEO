@@ -59,7 +59,8 @@ def test_attack_schema_uses_new_primitive_codes_and_package_ids():
     assert packages["full_stack_realistic_geo"]["active_primitives"] == ["A", "U", "C", "R", "E", "S", "M"]
 
 
-def test_mitigation_layer_names_use_new_terms():
+def test_mitigation_layer_artifact_ids_remain_compatible():
     assert LAYER_NAMES["L2"] == "L2_rationale_elicitation_mitigation"
+    assert LAYER_NAMES["L3"] == "L3_evidence_breakdown_mitigation"
     assert LAYER_NAMES["L4"] == "L4_context_balancing_mitigation"
     assert LAYER_NAMES["L5"] == "L5_instruction_filtering_mitigation"
