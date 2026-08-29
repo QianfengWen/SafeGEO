@@ -32,7 +32,7 @@ This release contains:
 
 - A GEO robustness benchmark with 22 attack variants and 2 controls (unmodified and truthful rewrite), over 600 cases and 3 target slots (40,800 instances).
 - A structured attack library of 7 manipulation primitives across 3 loci, from single moves to coherent realistic GEO packages.
-- A Hugging Face dataset in 10 Parquet configs, with hidden benchmark-reference labels and line-level evidence annotations.
+- A Hugging Face dataset with 10 full-benchmark Parquet configs plus 10 matching Diamond configs, including hidden benchmark-reference labels and line-level evidence annotations.
 - A matched mitigation study with the exact benchmark request as the no-mitigation baseline and five prompt/input-level interventions.
 - **SafeGEO Diamond**, a 600-instance, vertical-balanced screening split for inexpensive model iteration.
 
