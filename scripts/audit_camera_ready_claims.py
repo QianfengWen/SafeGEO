@@ -60,7 +60,7 @@ def audit_targets() -> dict[str, Any]:
     targets = []
     for row in parquet_rows(ROOT / "data/targets", ["fixed_geo_targets"]):
         targets.extend(decode(row["fixed_geo_targets"]))
-    roles = Counter(target["target_role"] for target in targets)
+    slots = Counter(target["target_slot"] for target in targets)
     hard_infeasible = sum(not target["hard_constraint_feasible"] for target in targets)
 
     # ``candidate_shortlist_rank`` records the upstream shortlist position, not
@@ -95,14 +95,14 @@ def audit_targets() -> dict[str, Any]:
     assert hard_infeasible == 1_754
     assert len(targets) - hard_infeasible == 46
     assert top_five == 46
-    assert set(roles.values()) == {600}
+    assert slots == {"A": 600, "B": 600, "C": 600}
     assert all("benchmark_reference_utility" in target for target in targets)
     return {
         "targets": len(targets),
         "hard_infeasible": hard_infeasible,
         "feasible_lower_utility": len(targets) - hard_infeasible,
         "reference_top_five": top_five,
-        "roles": dict(sorted(roles.items())),
+        "nominal_target_slots": dict(sorted(slots.items())),
     }
 
 
@@ -110,7 +110,7 @@ def audit_diamond() -> dict[str, Any]:
     rows = list(
         parquet_rows(
             ROOT / "diamond/labels",
-            ["base_case_id", "vertical", "package_id", "fixed_geo_targets"],
+            ["base_case_id", "vertical", "package_id", "attacked_target_slot", "fixed_geo_targets"],
         )
     )
     base_cases = {str(row["base_case_id"]) for row in rows}
@@ -120,20 +120,33 @@ def audit_diamond() -> dict[str, Any]:
             {str(row["base_case_id"]) for row in rows if str(row["vertical"]) == vertical}
         )
     packages = Counter(str(row["package_id"]) for row in rows)
+    attack_packages = {
+        "selective_comparison_note",
+        "false_fit_checklist",
+        "citation_padded_note",
+    }
+    selected_slot_by_case: dict[str, str] = {}
     for row in rows:
         targets = decode(row["fixed_geo_targets"])
-        target_a = next(target for target in targets if target["target_slot"] == "A")
-        assert target_a["quality_group"] == "hard_negative"
-        assert target_a["hard_constraint_feasible"] is False
+        if str(row["package_id"]) not in attack_packages:
+            continue
+        slot = str(row["attacked_target_slot"])
+        assert slot in {"A", "B", "C"}
+        selected_slot_by_case.setdefault(str(row["base_case_id"]), slot)
+        assert selected_slot_by_case[str(row["base_case_id"])] == slot
+        selected = next(target for target in targets if target["target_slot"] == slot)
+        assert "benchmark_reference_utility" in selected
     assert len(rows) == 600
     assert len(base_cases) == 120
     assert set(per_vertical.values()) == {20}
     assert sorted(packages.values()) == [120] * 5
+    assert Counter(selected_slot_by_case.values()) == {"A": 40, "B": 40, "C": 40}
     return {
         "instances": len(rows),
         "base_cases": len(base_cases),
         "base_cases_per_vertical": dict(sorted(per_vertical.items())),
         "conditions": dict(sorted(packages.items())),
+        "target_slot_case_counts": dict(sorted(Counter(selected_slot_by_case.values()).items())),
     }
 
 

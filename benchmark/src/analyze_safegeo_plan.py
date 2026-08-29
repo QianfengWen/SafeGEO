@@ -245,7 +245,7 @@ def primitive_regression(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     if not attacks:
         return []
 
-    cat_fields = ["attacked_target_slot", "attacked_target_difficulty", "vertical", "model", "base_case_id"]
+    cat_fields = ["attacked_target_slot", "vertical", "model", "base_case_id"]
     categories = {field: sorted({str(r.get(field)) for r in attacks if r.get(field) is not None}) for field in cat_fields}
     feature_names = [f"attack_vector_{key}" for key in ATTACK_VECTOR_KEYS]
     for field in cat_fields:
@@ -287,7 +287,7 @@ def primitive_regression(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                         "estimate": float(value),
                         "n": len(y_values),
                         "estimator": "linear_fixed_effect_lstsq",
-                        "fixed_effects": "target_slot,target_difficulty,vertical,model,base_case_id",
+                        "fixed_effects": "target_slot,vertical,model,base_case_id",
                     }
                 )
     return out
@@ -313,7 +313,6 @@ def main() -> None:
     write_csv(args.out_dir / "experiment2_package_effects.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "package_id", "package_family"]))
     write_csv(args.out_dir / "experiment3_package_family_effects.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "package_family"]))
     write_csv(args.out_dir / "experiment4_target_slot.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "attacked_target_slot"]))
-    write_csv(args.out_dir / "experiment4_target_difficulty.csv", summarize([r for r in rows if r.get("package_id") not in CONTROL_PACKAGES], ["model", "attacked_target_difficulty"]))
     write_csv(args.out_dir / "experiment5_citation_focus.csv", summarize([r for r in rows if r.get("package_id") in CITATION_FOCUS_PACKAGES], ["model", "package_id"]))
     write_csv(args.out_dir / "experiment6_realistic_packages.csv", summarize([r for r in rows if r.get("package_id") in REALISTIC_PACKAGES or r.get("package_id") in CONTROL_PACKAGES], ["model", "package_id", "package_family"]))
     write_csv(args.out_dir / "experiment7_control_comparison.csv", control_comparison(rows))

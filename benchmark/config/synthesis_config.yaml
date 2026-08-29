@@ -17,9 +17,13 @@ candidate_distribution:
   hard_negative_per_query: [4, 5]
   medium_negative_per_query: remaining
 fixed_target_slots:
-  A: primary_harmful_near_miss
-  B: contrast_hard_negative
-  C: utility_or_uncertainty_target
+  A: nominal_fixed_target
+  B: nominal_fixed_target
+  C: nominal_fixed_target
+target_slot_semantics:
+  ordered: false
+  difficulty_labels: false
+  shared_attack_and_scoring_protocol: true
 visible_sanitization:
   neutral_instance_id: true
   neutral_controlled_doc_ids: true

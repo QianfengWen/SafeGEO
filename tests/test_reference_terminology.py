@@ -33,5 +33,7 @@ def test_nested_target_records_use_benchmark_reference_terminology():
                     for target in targets:
                         assert "benchmark_reference_utility" in target
                         assert "verified_utility_score" not in target
+                        assert "target_difficulty" not in target
+                        assert target["target_role"] == "nominal_fixed_target"
                         description = target.get("primary_exploitable_gap", {}).get("description", "")
                         assert "canonical truth" not in description.lower()

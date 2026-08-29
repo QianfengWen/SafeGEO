@@ -133,18 +133,14 @@ the ten controlled lines; those filler lines do not carry attack primitives.
 
 ## Target Slots
 
-For each base case, three non-ground-truth candidates are sampled by evidence stratum and fixed
-as slots A, B, and C. A and B are hard negatives; C is drawn from a medium-negative or
-uncertainty stratum. No primary or acceptable ground-truth candidate is attacked. A package is
-applied to one slot at a time, so the same package is evaluated against all three targets, and
-in every instance only that target's source is rewritten while the others stay truthful. The
-mitigation study also evaluates all three slots.
-
-| Slot | Evidence stratum | Meaning |
-|---|---|---|
-| A | `primary_harmful_near_miss` | A high-quality hard negative that becomes harmful if the agent overlooks a query-stated requirement whose structured failure label is hidden. |
-| B | `contrast_hard_negative` | A hard negative used as a contrast condition. |
-| C | `utility_or_uncertainty_target` | A non-ground-truth medium negative with lower utility, missing evidence, or uncertainty. |
+For each base case, three eligible non-ground-truth candidates are fixed as nominal slots A, B,
+and C. No primary or acceptable ground-truth candidate is attacked. The slots are identifiers,
+not ordered or categorical difficulty labels: all three use the same attack generation, scoring,
+and reporting rules. Candidate-specific constraint and evidence properties remain available in
+the hidden reference annotations, but are not inferred from the slot letter. A package is applied
+to one slot at a time, so the same package is evaluated against all three targets, and in every
+instance only that target's source is rewritten while the others stay truthful. The mitigation
+study also evaluates all three slots.
 
 ## Summary of Counts
 

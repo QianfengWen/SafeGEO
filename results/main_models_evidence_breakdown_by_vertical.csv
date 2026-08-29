@@ -1,0 +1,19 @@
+model,vertical,target_reduction_pp
+Gemma,AI meeting transcription,16.6
+Gemma,Baby monitor,33.0
+Gemma,Carry-on backpack,27.1
+Gemma,Home air purifier,34.0
+Gemma,Noise-canceling headphones,36.8
+Gemma,Office chair,30.7
+Qwen,AI meeting transcription,27.0
+Qwen,Baby monitor,52.7
+Qwen,Carry-on backpack,57.8
+Qwen,Home air purifier,47.8
+Qwen,Noise-canceling headphones,30.1
+Qwen,Office chair,19.9
+Devstral,AI meeting transcription,6.2
+Devstral,Baby monitor,20.4
+Devstral,Carry-on backpack,23.0
+Devstral,Home air purifier,27.1
+Devstral,Noise-canceling headphones,16.1
+Devstral,Office chair,13.7

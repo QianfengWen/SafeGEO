@@ -33,8 +33,8 @@ This release contains:
 - A GEO robustness benchmark with 22 attack variants and 2 controls (unmodified and truthful rewrite), over 600 cases and 3 target slots (40,800 instances).
 - A structured attack library of 7 manipulation primitives across 3 loci, from single moves to coherent realistic GEO packages.
 - A Hugging Face dataset in 10 Parquet configs, with hidden benchmark-reference labels and line-level evidence annotations.
-- A matched mitigation study with the exact benchmark request as L0 and five prompt/input-level interventions (L1 to L5).
-- **SafeGEO Diamond**, a 600-instance, high-difficulty screening split for inexpensive model iteration.
+- A matched mitigation study with the exact benchmark request as the no-mitigation baseline and five prompt/input-level interventions.
+- **SafeGEO Diamond**, a 600-instance, vertical-balanced screening split for inexpensive model iteration.
 
 ## News
 
@@ -89,18 +89,18 @@ Main attack on the eight realistic GEO packages, averaged over targets (truthful
 GEO moves a flawed target into the top 3 in up to 90.9% of cases, up from roughly 3% to 13% under truthful controls. The strongest single tested variant, `full_stack_realistic_geo` on Devstral, reaches +83.2 percentage points on Target@3.
 
 Mitigation, reported as the Target@3 change relative to the no-mitigation baseline
-(Δ = Lx minus L0; a negative value means less harm):
+(a negative value means less harm):
 
-| Layer | Gemma 4 31B IT | Qwen3.6 27B | Devstral 2 24B |
+| Strategy | Gemma 4 31B IT | Qwen3.6 27B | Devstral 2 24B |
 |---|---|---|---|
-| L0 No mitigation (Target@3) | 79.6 | 78.3 | 90.9 |
-| L1 Defensive prompt | −15.1 | −11.0 | −2.8 |
-| L2 Rationale emphasis | −15.0 | +7.5 | +2.3 |
-| L3 Evidence breakdown | −29.7 | −39.2 | −17.7 |
-| L4 Context balancing | −11.5 | −4.5 | −3.2 |
-| L5 Instruction filtering | −2.2 | +3.0 | −0.5 |
+| No mitigation (Target@3) | 79.6 | 78.3 | 90.9 |
+| Defensive prompt | −15.1 | −11.0 | −2.8 |
+| Rationale elicitation | −15.0 | +7.5 | +2.3 |
+| Evidence breakdown | −29.7 | −39.2 | −17.7 |
+| Context balancing | −11.5 | −4.5 | −3.2 |
+| Instruction filtering | −2.2 | +3.0 | −0.5 |
 
-L3 asks the model to generate candidate-level evidence checks from the visible packet before ranking. It gives the largest reduction, reaching 39.2 percentage points on Target@3. On DeepSeek-V4-Flash, the realistic-package average raises Target@3 from 4.6% to 72.6% (+68.0 points) and HCV@1 from 23.0% to 73.4% (+50.4 points). Full aggregate tables are in [`results/`](results/) and the paper.
+Evidence breakdown asks the model to generate candidate-level evidence checks from the visible packet before ranking. It gives the largest reduction, reaching 39.2 percentage points on Target@3. On DeepSeek-V4-Flash, the realistic-package average raises Target@3 from 4.6% to 72.6% (+68.0 points) and HCV@1 from 23.0% to 73.4% (+50.4 points). Full aggregate tables are in [`results/`](results/) and the paper.
 
 ## Installation
 
@@ -187,7 +187,7 @@ OPENROUTER_API_KEY=...   PROVIDER=openrouter MODEL=openai/gpt-4o-mini bash scrip
 
 See [`benchmark/README.md`](benchmark/README.md) and [`mitigation/README.md`](mitigation/README.md) for the stage-by-stage pipelines and full options.
 
-For fast screening, run the same benchmark commands against [`diamond/`](diamond/) instead of `data/`. Diamond contains 600 difficulty-enriched instances; use the complete benchmark for population-level reporting.
+For fast screening, run the same benchmark commands against [`diamond/`](diamond/) instead of `data/`. Diamond contains 600 instances from 120 vertical-balanced cases, with one nominal target per case balanced across A/B/C. Its three attacks were selected for high attack effect, so use the complete benchmark for population-level reporting.
 
 ## Attack taxonomy
 
@@ -203,13 +203,13 @@ SafeGEO models GEO as an adversary that rewrites seller-controlled sources along
 | `S` | salience manipulation | model-facing |
 | `M` | model-directed instruction | model-facing |
 
-Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic packages. These packages use coherent synthetic seller-source templates; the name describes the benchmark family, not measured live-web prevalence. For each base case, slots A and B are sampled from non-ground-truth hard negatives and slot C from a non-ground-truth medium/uncertainty stratum. Each target is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
+Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic packages. These packages use coherent synthetic seller-source templates; the name describes the benchmark family, not measured live-web prevalence. Each base case has three fixed, eligible non-ground-truth targets recorded as nominal slots A/B/C. The slots are evaluated symmetrically and do not encode difficulty. Each target is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
 
 ## Mitigation study
 
 Given that GEO attacks work, what can a system developer do without changing the model? The study compares six matched conditions on the same attacked instances (all three target slots, the 8 realistic packages, 14,400 instances per layer) and reports changes against the unmitigated baseline.
 
-| Layer | Strategy | What changes |
+| Artifact ID | Strategy | What changes |
 |:--:|---|---|
 | L0 | No mitigation | Exact original benchmark system prompt, user serialization, source packet, and output contract. |
 | L1 | Defensive prompt | A defensive system instruction is added; nothing else changes. |
@@ -253,7 +253,7 @@ python scripts/audit_camera_ready_claims.py
 ├── DATA_LICENSE               CC-BY-4.0 (data).
 ├── assets/                    Figure sources.
 ├── data/                      The SafeGEO Hugging Face dataset (10 Parquet configs).
-├── diamond/                   The 600-instance high-difficulty screening split.
+├── diamond/                   The 600-instance vertical-balanced screening split.
 ├── sample/                    Tiny subset (2 base cases per vertical) for offline smoke tests.
 ├── src/safegeo/               Shared library (Parquet I/O, taxonomy constants).
 ├── benchmark/                 The GEO robustness benchmark (run, score, analyze).

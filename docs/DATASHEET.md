@@ -117,9 +117,10 @@ including:
 
 - 600 base cases, with 18 to 22 candidates per query and 2 to 3 ground-truth candidates per
   query.
-- Three non-ground-truth target slots per base case, sampled by evidence stratum: A and B from
-  hard negatives and C from a medium-negative or uncertainty stratum. No primary or acceptable
-  ground-truth candidate is used as an attack target.
+- Three eligible non-ground-truth targets per base case, fixed as nominal slots A/B/C. Slots are
+  evaluated symmetrically and do not encode difficulty; candidate-specific constraint and evidence
+  properties remain in the hidden reference annotations. No primary or acceptable ground-truth
+  candidate is used as an attack target.
 - A source budget per case (catalog entries, opened evidence chunks, and the number of
   controlled target sources, chunks, and lines per chunk).
 - Visible sanitization rules that neutralize instance and document identifiers and remove
@@ -155,7 +156,7 @@ The dataset is intended for:
   attacks raise attacked-target top-three placement and hard-constraint-violating top-one
   recommendations relative to truthful controls.
 - Studying agent-side mitigations: measuring how developer-side defenses (defensive
-  prompting, rationale emphasis, evidence breakdowns, context balancing, and instruction
+  prompting, rationale elicitation, evidence breakdowns, context balancing, and instruction
   filtering) reduce attack effectiveness on the realistic packages.
 
 The dataset should not be used to develop or improve GEO attacks against deployed systems.

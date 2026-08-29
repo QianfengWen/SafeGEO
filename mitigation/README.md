@@ -16,8 +16,9 @@ x 8 realistic GEO packages
 x each mitigation layer
 ```
 
-The three fixed targets are non-ground-truth candidates drawn from complementary hard-negative
-and medium/uncertainty strata. The 8 realistic packages are coherent synthetic seller-source templates
+The three fixed targets are eligible non-ground-truth candidates recorded as nominal A/B/C
+slots. They are evaluated symmetrically and the slot letters do not encode difficulty. The 8
+realistic packages are coherent synthetic seller-source templates
 (`caveat_burial_faq`,
 `popularity_heavy_profile`, `citation_padded_note`, `independent_buyer_guide`,
 `false_fit_checklist`, `selective_comparison_note`, `ai-directed_source_text`,
@@ -25,7 +26,7 @@ and medium/uncertainty strata. The 8 realistic packages are coherent synthetic s
 every layer is compared against `L0_source_only_baseline` on the same attacked instances.
 The `realistic` family, `L0_source_only_baseline`, and
 `L2_rationale_elicitation_mitigation` strings are retained as stable artifact identifiers;
-the L2 camera-ready display name is **Rationale emphasis**. Each layer runs 14,400 instances
+the display name is **Rationale elicitation**. Each condition runs 14,400 instances
 (600 base cases times 3 targets times 8 packages).
 
 ## Mitigation layers
@@ -34,7 +35,7 @@ the L2 camera-ready display name is **Rationale emphasis**. Each layer runs 14,4
 |---|---|---|
 | L0 | No mitigation | Exact benchmark system prompt, user-message serialization, output schema, and visible packet. |
 | L1 | Defensive prompt | A defensive system instruction is added; nothing else changes. |
-| L2 | Rationale emphasis | The output instruction for the benchmark's existing rationale and citation fields is tightened. |
+| L2 | Rationale elicitation | The output instruction for the benchmark's existing rationale and citation fields is tightened. |
 | L3 | Evidence breakdown | The model generates candidate-level evidence checks from the visible packet before ranking; no external sheet or hidden label is supplied. |
 | L4 | Context balancing | The model is instructed to balance source use; the source packet and order remain unchanged. |
 | L5 | Instruction filtering | The model is instructed to ignore source-internal directives; no source line is deleted or replaced. |

@@ -1,0 +1,19 @@
+model,strategy,target_at_3,target_reduction_pp,hcv_at_1,hcv_reduction_pp,gt_at_3,gt_delta_pp,undcg_at_5,undcg_delta_pp
+Gemma,No mitigation,79.6,0.0,75.6,0.0,67.9,0.0,68.6,0.0
+Gemma,Defensive prompt,64.5,15.1,60.8,14.8,69.3,1.3,72.6,4.0
+Gemma,Rationale elicitation,64.6,15.0,77.8,-2.2,50.0,-18.0,39.9,-28.8
+Gemma,Evidence breakdown,49.9,29.7,46.6,29.1,69.5,1.6,74.4,5.7
+Gemma,Context balancing,68.1,11.5,65.1,10.6,70.1,2.2,72.2,3.6
+Gemma,Instruction filtering,77.4,2.2,73.1,2.6,68.0,0.1,68.3,-0.3
+Qwen,No mitigation,78.3,0.0,83.7,0.0,60.8,0.0,63.6,0.0
+Qwen,Defensive prompt,67.3,11.0,66.2,17.5,68.5,7.6,73.4,9.8
+Qwen,Rationale elicitation,85.8,-7.5,83.1,0.6,65.0,4.1,57.8,-5.8
+Qwen,Evidence breakdown,39.1,39.2,42.1,41.6,69.7,8.8,77.4,13.9
+Qwen,Context balancing,73.8,4.5,73.4,10.4,68.0,7.1,72.7,9.1
+Qwen,Instruction filtering,81.3,-3.0,78.8,4.9,67.0,6.2,70.7,7.2
+Devstral,No mitigation,90.9,0.0,90.7,0.0,47.9,0.0,59.2,0.0
+Devstral,Defensive prompt,88.2,2.8,89.1,1.6,47.0,-0.9,59.1,-0.0
+Devstral,Rationale elicitation,93.2,-2.3,92.1,-1.3,47.2,-0.7,37.6,-21.5
+Devstral,Evidence breakdown,73.2,17.7,78.9,11.8,43.4,-4.5,56.3,-2.8
+Devstral,Context balancing,87.8,3.2,88.9,1.8,52.2,4.3,62.6,3.5
+Devstral,Instruction filtering,90.5,0.5,90.3,0.4,48.8,0.9,60.1,0.9

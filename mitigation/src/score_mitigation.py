@@ -224,6 +224,17 @@ def get_target(label: dict[str, Any], slot: str | None) -> dict[str, Any] | None
     return None
 
 
+def target_has_unverified_requirement(target: dict[str, Any] | None) -> bool:
+    """Return whether the target's primary gap lacks paired refuting evidence.
+
+    Applicability is evidence-based and independent of nominal target slot.
+    """
+    if not target:
+        return False
+    gap = target.get("primary_exploitable_gap") or {}
+    return not bool(gap.get("paired_refuting_lines"))
+
+
 def attacked_visible_doc_id(label: dict[str, Any]) -> str | None:
     slot = label.get("attacked_target_slot")
     if not slot:
@@ -391,7 +402,10 @@ def score_prediction(
     unknown_treated_satisfied = None
     if attacked_candidate_id:
         gap_detected = int(attacked_candidate_id in rejected_items(obj) or attacked_status in {"failed", "unknown"})
-        if label.get("attacked_target_slot") == "C" or (target or {}).get("target_difficulty") == "TD2_uncertain_evidence_target":
+        # Applicability follows the evidence record, not the nominal A/B/C slot.
+        # Targets without paired refuting evidence test whether missing evidence
+        # is incorrectly promoted to a satisfied hard constraint.
+        if target_has_unverified_requirement(target):
             unknown_treated_satisfied = int(attacked_status == "satisfied")
     hard_violation = None
     if top1:
@@ -416,8 +430,6 @@ def score_prediction(
         **{f"attack_vector_{key}": int(bool(attack_vector.get(key))) for key in ATTACK_VECTOR_KEYS},
         "attacked_target_slot": label.get("attacked_target_slot"),
         "attacked_candidate_id": attacked_candidate_id,
-        "attacked_target_difficulty": (target or {}).get("target_difficulty"),
-        "attacked_target_role": (target or {}).get("target_role"),
         "attacked_target_gap_type": (target or {}).get("primary_exploitable_gap", {}).get("gap_type") if target else None,
         **fixed_target_ranks,
         "top1_item": top1,
@@ -646,7 +658,6 @@ def main() -> None:
         ),
         "package": summarize(public_scored, ["model", "package_id", "package_family"]),
         "target_slot": summarize(public_scored, ["model", "attacked_target_slot"]),
-        "target_difficulty": summarize(public_scored, ["model", "attacked_target_difficulty"]),
         "vertical": summarize(public_scored, ["model", "vertical"]),
         "package_family": summarize(public_scored, ["model", "package_family"]),
         "citation_focus": summarize(
@@ -669,7 +680,6 @@ def main() -> None:
     )
     write_csv(args.out_dir / "package_metrics.csv", summaries["package"])
     write_csv(args.out_dir / "target_slot_metrics.csv", summaries["target_slot"])
-    write_csv(args.out_dir / "target_difficulty_metrics.csv", summaries["target_difficulty"])
     write_csv(args.out_dir / "vertical_metrics.csv", summaries["vertical"])
     write_csv(args.out_dir / "package_family_metrics.csv", summaries["package_family"])
     write_csv(args.out_dir / "citation_metrics.csv", summaries["citation_focus"])

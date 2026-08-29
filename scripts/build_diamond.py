@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Build the published SafeGEO Diamond screening subset.
 
-The subset uses a deterministic, vertical-stratified base-case sample and the
+The subset uses a deterministic, vertical-balanced base-case sample and the
 three highest-Target@3 realistic packages on the held-out DeepSeek-V4-Flash
-robustness check.  It is intentionally a hard stress set, not an estimator of
-full-benchmark averages.
+robustness check.  Each selected case contributes one nominal target, balanced
+across slots A/B/C; the slots are not difficulty levels.  Diamond is a fast
+screening set, not an estimator of full-benchmark averages.
 """
 from __future__ import annotations
 
@@ -103,7 +104,15 @@ def main() -> None:
     query_set = set(query_ids)
     attack_set = set(config["attack_packages"])
     control_set = set(config["controls"])
-    slot_set = set(config["target_slots"])
+    target_slots = [str(slot) for slot in config["target_slots"]]
+    if not target_slots:
+        raise ValueError("target_slots must contain at least one nominal target slot")
+    if config.get("target_selection_strategy") != "balanced_round_robin_one_per_base_case":
+        raise ValueError("Unsupported Diamond target_selection_strategy")
+    target_slot_by_case = {
+        base_case_id: target_slots[index % len(target_slots)]
+        for index, base_case_id in enumerate(base_ids)
+    }
     selected_labels = filtered_table(
         args.data_root,
         "labels",
@@ -113,7 +122,8 @@ def main() -> None:
             str(row.get("package_id")) in control_set
             or (
                 str(row.get("package_id")) in attack_set
-                and str(row.get("attacked_target_slot")) in slot_set
+                and str(row.get("attacked_target_slot"))
+                == target_slot_by_case[str(row.get("base_case_id"))]
             )
         ),
     )
@@ -201,7 +211,13 @@ def main() -> None:
         "query_ids": query_ids,
         "attack_packages": config["attack_packages"],
         "controls": config["controls"],
-        "target_slots": config["target_slots"],
+        "target_slots": target_slots,
+        "target_selection_strategy": config["target_selection_strategy"],
+        "target_slot_by_base_case": target_slot_by_case,
+        "target_slot_case_counts": {
+            slot: sum(assigned == slot for assigned in target_slot_by_case.values())
+            for slot in target_slots
+        },
         "row_counts": counts,
         "selection_bias_notice": config["purpose"],
     }

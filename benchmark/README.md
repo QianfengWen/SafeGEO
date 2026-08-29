@@ -71,7 +71,7 @@ This writes per-instance scores and aggregated metric tables:
 - `per_instance_scored.jsonl`: one scored record per instance (the input to the analyzer).
 - `overall_metrics.json`: all aggregations in one JSON document.
 - `model_metrics.csv`, `package_metrics.csv`, `package_family_metrics.csv`,
-  `target_slot_metrics.csv`, `target_difficulty_metrics.csv`, `vertical_metrics.csv`,
+  `target_slot_metrics.csv`, `vertical_metrics.csv`,
   `citation_metrics.csv`: the same metrics broken down by each grouping.
 
 ### 3. Analyze
@@ -89,8 +89,8 @@ The analyzer writes `dataset_stats.json` and a set of experiment tables:
   package and by family.
 - `experiment3_primitive_linear_effects.csv`: linear regression of outcomes on the active
   primitives.
-- `experiment4_target_slot.csv`, `experiment4_target_difficulty.csv`: effects by target slot
-  and difficulty.
+- `experiment4_target_slot.csv`: effects by nominal target slot. Slots A/B/C are reported
+  symmetrically and are not difficulty levels.
 - `experiment5_citation_focus.csv`: citation behavior on the citation-focused packages.
 - `experiment6_realistic_packages.csv`: the realistic packages versus controls.
 - `experiment7_control_comparison.csv`: attacked instances versus truthful controls.
@@ -138,9 +138,10 @@ The full chain runs end to end against the tiny `sample/` subset with no GPU; se
 
 For rapid screening, substitute `diamond/visible`, `diamond/labels`, and the corresponding
 Diamond annotation directories in the commands above, and use `--experiment full`. Diamond has
-600 instances (120 vertical-balanced base cases, one target slot, three deliberately difficult
-realistic packages, and two controls). It is a biased stress set and must not be used to estimate the
-full benchmark average; see [`diamond/README.md`](../diamond/README.md).
+600 instances (120 vertical-balanced base cases, one target per case balanced across nominal slots
+A/B/C, three high-effect realistic packages, and two controls). Attack selection makes it a biased
+stress set, so it must not be used to estimate the full benchmark average; see
+[`diamond/README.md`](../diamond/README.md).
 
 Published camera-ready aggregate tables, including DeepSeek-V4-Flash and the paired mechanism
 analysis, are in [`results/`](../results/). Prediction and response traces are not distributed.

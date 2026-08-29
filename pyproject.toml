@@ -9,5 +9,8 @@ description = "SafeGEO: Understanding Generative Engine Optimization Risks in Re
 requires-python = ">=3.10"
 dependencies = ["pyarrow>=14", "numpy>=1.24", "openai>=1.0"]
 
+[project.optional-dependencies]
+paper = ["matplotlib>=3.8"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,10 +1,11 @@
 {
   "name": "SafeGEO Diamond",
-  "version": "1.0",
-  "purpose": "Fast, vertical-balanced, difficulty-enriched screening; use the full benchmark for population-level estimates.",
+  "version": "1.1",
+  "purpose": "Fast, vertical-balanced screening with one nominal target per case, balanced across A/B/C; use the full benchmark for population-level estimates.",
   "selection_seed": "safegeo-diamond-v1",
   "base_cases_per_vertical": 20,
-  "target_slots": ["A"],
+  "target_slots": ["A", "B", "C"],
+  "target_selection_strategy": "balanced_round_robin_one_per_base_case",
   "attack_packages": [
     "selective_comparison_note",
     "false_fit_checklist",

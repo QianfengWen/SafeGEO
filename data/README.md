@@ -42,6 +42,13 @@ across 6 product verticals (100 cases each). Each base case is expanded into 68 
 and model-facing) drawn from 7 primitives; see the
 [attack taxonomy](../docs/ATTACK_TAXONOMY.md) for the full breakdown.
 
+The three target slots are nominal identifiers evaluated under the same protocol; A/B/C do not
+encode difficulty. Candidate-specific quality and evidence annotations remain available for
+scoring and analysis without turning the slot letters into difficulty categories.
+Nested target records therefore use the shared role `nominal_fixed_target` and do not expose a
+target-difficulty field. Run `python scripts/normalize_target_metadata.py --check` to verify this
+release invariant.
+
 The 6 verticals are: `ai_meeting_transcription`, `baby_monitor`, `carry_on_backpack`,
 `home_air_purifier`, `noise_canceling_headphones`, and `office_chair`.
 
