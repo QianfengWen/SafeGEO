@@ -11,7 +11,7 @@
     "office_chair": 6800
   },
   "query_semantics_audit": {
-    "comparison": "exact serialized user_query versus the identifier-sanitized construction query",
+    "comparison": "exact serialized user_query versus the construction query",
     "matched_queries": 600,
     "mismatched_queries": 0,
     "matched_visible_rows": 40800,

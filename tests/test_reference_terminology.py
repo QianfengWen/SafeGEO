@@ -34,6 +34,22 @@ def test_nested_target_records_use_benchmark_reference_terminology():
                         assert "benchmark_reference_utility" in target
                         assert "verified_utility_score" not in target
                         assert "target_difficulty" not in target
-                        assert target["target_role"] == "nominal_fixed_target"
+                        assert "target_role" not in target
+                        assert "target_slot" not in target
                         description = target.get("primary_exploitable_gap", {}).get("description", "")
                         assert "canonical truth" not in description.lower()
+
+
+def test_release_uses_candidate_ids_for_target_identity():
+    for root in DATASET_ROOTS:
+        label_path = next((root / "labels").glob("*.parquet"))
+        label_names = pq.read_schema(label_path).names
+        assert "attacked_candidate_id" in label_names
+        assert "attacked_target_slot" not in label_names
+        assert "controlled_source_candidate_mapping" in label_names
+        assert "controlled_source_slot_mapping" not in label_names
+
+        line_path = next((root / "geo_line_annotations").glob("*.parquet"))
+        line_names = pq.read_schema(line_path).names
+        assert "candidate_id" in line_names
+        assert "target_slot" not in line_names

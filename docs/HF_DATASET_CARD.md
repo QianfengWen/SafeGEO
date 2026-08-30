@@ -56,14 +56,14 @@ SafeGEO tests whether recommendation agents preserve utility-aligned decisions
 when seller-controlled web sources are rewritten with Generative Engine
 Optimization (GEO) attacks. The full benchmark contains 600 recommendation base
 cases across six product verticals. Each case is expanded into 68 instances: 22
-attack packages applied separately to three fixed targets, plus two controls,
+attack packages applied separately to three sampled targets, plus two controls,
 for 40,800 instances total.
 
-Target A/B/C are nominal identifiers. They do not encode difficulty, and all
-three targets use the same attack-generation, scoring, and reporting protocol.
-Candidate-specific feasibility, quality, and evidence annotations remain
-available for analysis. Nested target records use the shared role
-`nominal_fixed_target` and contain no target-difficulty field.
+A fixed release seed samples three eligible non-ground-truth candidates per
+case without replacement. Candidate IDs identify the targets throughout the
+release. Candidate-specific feasibility, quality, and evidence annotations
+remain available for analysis. Product and vendor names in the candidate roster
+and source packet use synthetic replacements.
 
 The attack library spans three manipulation loci (content, epistemic, and
 model-facing) and seven primitives. Full construction and schema documentation
@@ -75,8 +75,8 @@ and [datasheet](https://github.com/QianfengWen/SafeGEO/blob/main/docs/DATASHEET.
 
 SafeGEO Diamond is a 600-instance screening subset for inexpensive iteration.
 It contains 120 deterministic, vertical-balanced base cases (20 per vertical),
-with one target per case balanced across A/B/C (40 cases per target ID). Each
-case includes three high-effect realistic attack packages and both controls.
+with one sampled target per case. Each case includes three high-effect realistic
+attack packages and both controls.
 Attack selection makes Diamond a biased screening set; use the complete
 benchmark for population-level reporting. The exact cases, target assignments,
 and row counts are recorded in
@@ -105,7 +105,7 @@ The full dataset and Diamond each expose the same ten logical configs:
 | `candidate_quality` | `diamond_candidate_quality` | Candidate-level benchmark-reference quality annotations. |
 | `source_annotations` | `diamond_source_annotations` | Source annotations for citation-validity scoring. |
 | `geo_line_annotations` | `diamond_geo_line_annotations` | Misleading and refuting controlled-source lines. |
-| `targets` | `diamond_targets` | Fixed nominal A/B/C targets by base case. |
+| `targets` | `diamond_targets` | Three sampled targets by base case. |
 | `instances_manifest` | `diamond_instances_manifest` | Expanded-instance mapping. |
 | `quality_distributions` | `diamond_quality_distributions` | Per-query candidate-quality distributions. |
 | `requirement_annotations` | `diamond_requirement_annotations` | Query requirements used by the benchmark reference. |

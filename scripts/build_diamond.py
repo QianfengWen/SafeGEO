@@ -3,9 +3,9 @@
 
 The subset uses a deterministic, vertical-balanced base-case sample and the
 three highest-Target@3 realistic packages on the held-out DeepSeek-V4-Flash
-robustness check.  Each selected case contributes one nominal target, balanced
-across slots A/B/C; the slots are not difficulty levels.  Diamond is a fast
-screening set, not an estimator of full-benchmark averages.
+robustness check. Each selected case contributes one of its three sampled
+targets, chosen with a fixed seed. Diamond is a fast screening set; the full
+benchmark supports population-level averages.
 """
 from __future__ import annotations
 
@@ -60,6 +60,21 @@ def select_base_cases(data_root: Path, count: int, seed: str) -> tuple[list[str]
     return sorted(base_ids), sorted(query_ids)
 
 
+def load_sampled_targets(data_root: Path) -> dict[str, list[str]]:
+    sampled: dict[str, list[str]] = {}
+    for shard in sorted((data_root / "targets").glob("*.parquet")):
+        rows = pq.read_table(shard, columns=["base_case_id", "fixed_geo_targets"]).to_pylist()
+        for row in rows:
+            targets = parse_json_cell(row["fixed_geo_targets"]) or []
+            candidate_ids = [str(target["candidate_id"]) for target in targets]
+            if len(candidate_ids) != 3 or len(set(candidate_ids)) != 3:
+                raise AssertionError(
+                    f"{row['base_case_id']} does not contain three unique sampled targets"
+                )
+            sampled[str(row["base_case_id"])] = candidate_ids
+    return sampled
+
+
 def filtered_table(root: Path, name: str, key_columns: list[str], keep) -> pa.Table:
     """Filter Parquet in small record batches to keep nested packets bounded."""
     selected: list[pa.Table] = []
@@ -104,26 +119,30 @@ def main() -> None:
     query_set = set(query_ids)
     attack_set = set(config["attack_packages"])
     control_set = set(config["controls"])
-    target_slots = [str(slot) for slot in config["target_slots"]]
-    if not target_slots:
-        raise ValueError("target_slots must contain at least one nominal target slot")
-    if config.get("target_selection_strategy") != "balanced_round_robin_one_per_base_case":
+    if config.get("target_selection_strategy") != "fixed_seed_one_per_base_case":
         raise ValueError("Unsupported Diamond target_selection_strategy")
-    target_slot_by_case = {
-        base_case_id: target_slots[index % len(target_slots)]
-        for index, base_case_id in enumerate(base_ids)
+    sampled_targets = load_sampled_targets(args.data_root)
+    target_candidate_by_case = {
+        base_case_id: min(
+            sampled_targets[base_case_id],
+            key=lambda candidate_id: stable_key(
+                candidate_id,
+                f"{config['selection_seed']}:target",
+            ),
+        )
+        for base_case_id in base_ids
     }
     selected_labels = filtered_table(
         args.data_root,
         "labels",
-        ["base_case_id", "package_id", "attacked_target_slot"],
+        ["base_case_id", "package_id", "attacked_candidate_id"],
         lambda row: str(row.get("base_case_id")) in base_set
         and (
             str(row.get("package_id")) in control_set
             or (
                 str(row.get("package_id")) in attack_set
-                and str(row.get("attacked_target_slot"))
-                == target_slot_by_case[str(row.get("base_case_id"))]
+                and str(row.get("attacked_candidate_id"))
+                == target_candidate_by_case[str(row.get("base_case_id"))]
             )
         ),
     )
@@ -135,9 +154,9 @@ def main() -> None:
 
     controlled_doc_ids: set[str] = set()
     for row in label_rows:
-        mapping = parse_json_cell(row.get("controlled_source_slot_mapping")) or {}
-        for slot_record in mapping.values():
-            doc_id = slot_record.get("original_doc_id")
+        mapping = parse_json_cell(row.get("controlled_source_candidate_mapping")) or {}
+        for source_record in mapping.values():
+            doc_id = source_record.get("original_doc_id")
             if doc_id:
                 controlled_doc_ids.add(str(doc_id))
 
@@ -211,13 +230,8 @@ def main() -> None:
         "query_ids": query_ids,
         "attack_packages": config["attack_packages"],
         "controls": config["controls"],
-        "target_slots": target_slots,
         "target_selection_strategy": config["target_selection_strategy"],
-        "target_slot_by_base_case": target_slot_by_case,
-        "target_slot_case_counts": {
-            slot: sum(assigned == slot for assigned in target_slot_by_case.values())
-            for slot in target_slots
-        },
+        "target_candidate_by_base_case": target_candidate_by_case,
         "row_counts": counts,
         "selection_bias_notice": config["purpose"],
     }

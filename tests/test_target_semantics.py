@@ -17,14 +17,14 @@ def _load(path: str):
     "module_path",
     ["benchmark/src/score_safegeo.py", "mitigation/src/score_mitigation.py"],
 )
-def test_unverified_requirement_is_evidence_based_not_slot_based(module_path: str):
+def test_unverified_requirement_uses_the_target_evidence_record(module_path: str):
     scorer = _load(module_path)
     without_refutation = {
-        "target_slot": "A",
+        "candidate_id": "ITEM07",
         "primary_exploitable_gap": {"paired_refuting_lines": []},
     }
     with_refutation = {
-        "target_slot": "C",
+        "candidate_id": "ITEM20",
         "primary_exploitable_gap": {
             "paired_refuting_lines": [{"doc_id": "SRC001", "line_id": 2}]
         },

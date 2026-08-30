@@ -12,11 +12,11 @@ def _rows(name: str, columns: list[str]):
 
 def test_diamond_manifest_and_row_counts():
     manifest = json.loads(Path("diamond/selection_manifest.json").read_text(encoding="utf-8"))
-    assert manifest["version"] == "1.1"
+    assert manifest["version"] == "1.2"
     assert len(manifest["base_case_ids"]) == 120
-    assert manifest["target_slots"] == ["A", "B", "C"]
-    assert manifest["target_selection_strategy"] == "balanced_round_robin_one_per_base_case"
-    assert manifest["target_slot_case_counts"] == {"A": 40, "B": 40, "C": 40}
+    assert manifest["target_selection_strategy"] == "fixed_seed_one_per_base_case"
+    assert len(manifest["target_candidate_by_base_case"]) == 120
+    assert set(manifest["target_candidate_by_base_case"]) == set(manifest["base_case_ids"])
     assert "difficulty" not in manifest["selection_bias_notice"].lower()
     assert manifest["attack_packages"] == [
         "selective_comparison_note",
@@ -29,7 +29,7 @@ def test_diamond_manifest_and_row_counts():
 
 
 def test_diamond_is_balanced_and_has_three_attacks_plus_two_controls():
-    labels = _rows("labels", ["base_case_id", "vertical", "package_id", "attacked_target_slot"])
+    labels = _rows("labels", ["base_case_id", "vertical", "package_id", "attacked_candidate_id"])
     per_vertical = Counter({
         vertical: len({row["base_case_id"] for row in labels if row["vertical"] == vertical})
         for vertical in {row["vertical"] for row in labels}
@@ -52,16 +52,12 @@ def test_diamond_is_balanced_and_has_three_attacks_plus_two_controls():
         if row["package_id"]
         not in {"original_no_geo_control", "all_truthful_target_control"}
     ]
-    selected_slot_by_case = {}
+    selected_candidate_by_case = {}
     for row in attacked:
-        selected_slot_by_case.setdefault(row["base_case_id"], row["attacked_target_slot"])
-        assert row["attacked_target_slot"] == selected_slot_by_case[row["base_case_id"]]
-    assert Counter(selected_slot_by_case.values()) == {"A": 40, "B": 40, "C": 40}
-    assert Counter(row["attacked_target_slot"] for row in attacked) == {
-        "A": 120,
-        "B": 120,
-        "C": 120,
-    }
+        selected_candidate_by_case.setdefault(row["base_case_id"], row["attacked_candidate_id"])
+        assert row["attacked_candidate_id"] == selected_candidate_by_case[row["base_case_id"]]
+    assert len(selected_candidate_by_case) == 120
+    assert set(Counter(row["attacked_candidate_id"] for row in attacked).values()) == {3}
 
 
 def test_diamond_visible_and_label_ids_align():
@@ -71,7 +67,7 @@ def test_diamond_visible_and_label_ids_align():
 
 
 def test_diamond_selected_targets_are_present_and_scored_uniformly():
-    labels = _rows("labels", ["package_id", "attacked_target_slot", "fixed_geo_targets"])
+    labels = _rows("labels", ["package_id", "attacked_candidate_id", "fixed_geo_targets"])
     for row in labels:
         if row["package_id"] in {
             "original_no_geo_control",
@@ -82,8 +78,9 @@ def test_diamond_selected_targets_are_present_and_scored_uniformly():
         if isinstance(targets, str):
             targets = json.loads(targets)
         selected = next(
-            target for target in targets if target["target_slot"] == row["attacked_target_slot"]
+            target for target in targets if target["candidate_id"] == row["attacked_candidate_id"]
         )
-        assert selected["target_slot"] in {"A", "B", "C"}
+        assert "target_slot" not in selected
+        assert "target_role" not in selected
         assert "benchmark_reference_utility" in selected
         assert "verified_utility_score" not in selected

@@ -2,16 +2,15 @@ experiment_name: agent_design_mitigation_study
 base_dataset_name: source_only_attack_benchmark
 purpose: >-
   Evaluate prompt/input-level interventions on the realistic GEO packages.
-  The experiment uses 600 base cases, all three target slots, and eight plausible
-  realistic GEO packages. No no-attack controls are used in this mitigation stress test;
-  each layer is compared against L0 on the same attacked instances.
+  The experiment uses 600 base cases, all three sampled targets, and eight
+  realistic GEO packages. Each intervention is compared with no mitigation on
+  the same attacked instances.
 
 target_selection:
-  target_slots: [A, B, C]
+  targets_per_case: 3
   rationale: >-
-    All three fixed non-ground-truth target slots are retained so that the L0
-    condition is exactly the main benchmark attack set and mitigation effects are
-    not tied to one target role.
+    All three sampled non-ground-truth candidates are retained, matching the
+    main benchmark attack set.
 
 packages:
   package_family: realistic  # retained as the stable dataset identifier
@@ -38,12 +37,12 @@ run_sizes:
   final:
     base_cases: 600
     packages_per_case: 8
-    target_slots: 3
+    targets_per_case: 3
     instances_per_layer: 14400
   screening:
     base_cases: 150
     packages_per_case: 8
-    target_slots: 3
+    targets_per_case: 3
     instances_per_layer: 3600
 
 metrics:

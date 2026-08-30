@@ -58,9 +58,11 @@ def audit_queries() -> dict[str, int]:
 
 def audit_targets() -> dict[str, Any]:
     targets = []
+    per_case_counts = []
     for row in parquet_rows(ROOT / "data/targets", ["fixed_geo_targets"]):
-        targets.extend(decode(row["fixed_geo_targets"]))
-    slots = Counter(target["target_slot"] for target in targets)
+        case_targets = decode(row["fixed_geo_targets"])
+        targets.extend(case_targets)
+        per_case_counts.append(len(case_targets))
     hard_infeasible = sum(not target["hard_constraint_feasible"] for target in targets)
 
     # ``candidate_shortlist_rank`` records the upstream shortlist position, not
@@ -95,14 +97,17 @@ def audit_targets() -> dict[str, Any]:
     assert hard_infeasible == 1_754
     assert len(targets) - hard_infeasible == 46
     assert top_five == 46
-    assert slots == {"A": 600, "B": 600, "C": 600}
+    assert set(per_case_counts) == {3}
+    assert all("target_slot" not in target for target in targets)
+    assert all("target_role" not in target for target in targets)
+    assert all("target_difficulty" not in target for target in targets)
     assert all("benchmark_reference_utility" in target for target in targets)
     return {
         "targets": len(targets),
         "hard_infeasible": hard_infeasible,
         "feasible_lower_utility": len(targets) - hard_infeasible,
         "reference_top_five": top_five,
-        "nominal_target_slots": dict(sorted(slots.items())),
+        "targets_per_case": 3,
     }
 
 
@@ -110,7 +115,7 @@ def audit_diamond() -> dict[str, Any]:
     rows = list(
         parquet_rows(
             ROOT / "diamond/labels",
-            ["base_case_id", "vertical", "package_id", "attacked_target_slot", "fixed_geo_targets"],
+            ["base_case_id", "vertical", "package_id", "attacked_candidate_id", "fixed_geo_targets"],
         )
     )
     base_cases = {str(row["base_case_id"]) for row in rows}
@@ -125,28 +130,27 @@ def audit_diamond() -> dict[str, Any]:
         "false_fit_checklist",
         "citation_padded_note",
     }
-    selected_slot_by_case: dict[str, str] = {}
+    selected_candidate_by_case: dict[str, str] = {}
     for row in rows:
         targets = decode(row["fixed_geo_targets"])
         if str(row["package_id"]) not in attack_packages:
             continue
-        slot = str(row["attacked_target_slot"])
-        assert slot in {"A", "B", "C"}
-        selected_slot_by_case.setdefault(str(row["base_case_id"]), slot)
-        assert selected_slot_by_case[str(row["base_case_id"])] == slot
-        selected = next(target for target in targets if target["target_slot"] == slot)
+        candidate_id = str(row["attacked_candidate_id"])
+        selected_candidate_by_case.setdefault(str(row["base_case_id"]), candidate_id)
+        assert selected_candidate_by_case[str(row["base_case_id"])] == candidate_id
+        selected = next(target for target in targets if target["candidate_id"] == candidate_id)
         assert "benchmark_reference_utility" in selected
     assert len(rows) == 600
     assert len(base_cases) == 120
     assert set(per_vertical.values()) == {20}
     assert sorted(packages.values()) == [120] * 5
-    assert Counter(selected_slot_by_case.values()) == {"A": 40, "B": 40, "C": 40}
+    assert len(selected_candidate_by_case) == 120
     return {
         "instances": len(rows),
         "base_cases": len(base_cases),
         "base_cases_per_vertical": dict(sorted(per_vertical.items())),
         "conditions": dict(sorted(packages.items())),
-        "target_slot_case_counts": dict(sorted(Counter(selected_slot_by_case.values()).items())),
+        "selected_targets": len(selected_candidate_by_case),
     }
 
 
@@ -165,7 +169,7 @@ def audit_mitigation() -> dict[str, Any]:
     sample_path = next((ROOT / "sample/visible").glob("*.parquet"))
     sample = pq.read_table(sample_path).slice(0, 1).to_pylist()[0]
     for layer in build.LAYER_IDS:
-        transformed = build.transform_visible(sample, {}, layer, "A")
+        transformed = build.transform_visible(sample, {}, layer)
         assert transformed == sample
         assert transformed is not sample
     return {

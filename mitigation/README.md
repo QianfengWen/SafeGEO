@@ -11,14 +11,13 @@ uses:
 
 ```
 600 base cases
-x 3 target slots (A, B, C)
+x 3 sampled targets
 x 8 realistic GEO packages
 x each mitigation layer
 ```
 
-The three fixed targets are eligible non-ground-truth candidates recorded as nominal A/B/C
-slots. They are evaluated symmetrically and the slot letters do not encode difficulty. The 8
-realistic packages are coherent synthetic seller-source templates
+The three targets are eligible non-ground-truth candidates sampled without replacement with a
+fixed release seed. The 8 realistic packages are coherent synthetic seller-source templates
 (`caveat_burial_faq`,
 `popularity_heavy_profile`, `citation_padded_note`, `independent_buyer_guide`,
 `false_fit_checklist`, `selective_comparison_note`, `ai-directed_source_text`,
@@ -62,7 +61,7 @@ python mitigation/src/build_runfiles.py \
   --layers L0,L1,L2,L3,L4,L5
 ```
 
-This selects all three attacked target slots for the 8 realistic packages and emits one
+This selects all three attacked targets for the 8 realistic packages and emits one
 runfile per layer under `runs/mitigation/runfiles/`, along with
 `runs/mitigation/labels/mitigation_labels_manifest.jsonl` and a `run_summary.json`. Each
 layer has the same instance count (14,400 in the full run). For a smaller screening run, pass

@@ -28,7 +28,7 @@ support/refutation contradictions. Utility ordering varies more, motivating the 
 *benchmark-reference utility*.
 
 An exact serialization audit compares every model-visible `user_query` with its
-identifier-sanitized construction query. All 600 unique queries and all 40,800 expanded rows
+construction query. All 600 unique queries and all 40,800 expanded rows
 match. The executable check is:
 
 ```bash

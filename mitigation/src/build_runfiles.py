@@ -4,7 +4,7 @@
 This script reads a SafeGEO Parquet dataset and constructs layer-specific
 runfiles for the mitigation experiment:
 
-  600 base cases × 3 target slots × 8 realistic packages ×
+  600 base cases × 3 sampled targets × 8 realistic packages ×
   L0–L5 conditions.
 
 It does not include no-GEO or all-truthful controls. Mitigation is measured by
@@ -91,20 +91,20 @@ def choose_base_cases(labels: List[Dict[str, Any]], per_vertical: Optional[int],
     return selected
 
 
-def get_target_info(label: Dict[str, Any], slot: str) -> Optional[Dict[str, Any]]:
+def get_target_info(label: Dict[str, Any], candidate_id: str) -> Optional[Dict[str, Any]]:
     for t in label.get("fixed_geo_targets", []):
-        if t.get("target_slot") == slot:
+        if t.get("candidate_id") == candidate_id:
             return t
     return None
 
 
-def transform_visible(row: Dict[str, Any], label: Dict[str, Any], layer: str, target_slot: str) -> Dict[str, Any]:
+def transform_visible(row: Dict[str, Any], label: Dict[str, Any], layer: str) -> Dict[str, Any]:
     """Return an independent copy of the shared visible packet for a condition.
 
     L1--L5 vary their system instructions. L3 adds a response field, while L4
     and L5 leave document order and source lines intact.
     """
-    del label, target_slot
+    del label
     if layer not in LAYER_IDS:
         raise ValueError(f"Unknown layer: {layer}")
     return copy.deepcopy(row)
@@ -114,11 +114,6 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset-root", type=Path, default=Path("data"), help="Root of the SafeGEO Parquet dataset (the data/ dir)")
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument(
-        "--target-slots",
-        default="A,B,C",
-        help="Comma-separated attacked target slots (default: A,B,C).",
-    )
     ap.add_argument("--layers", default="L0,L1,L2,L3,L4,L5")
     ap.add_argument("--base-cases-per-vertical", type=int, default=None, help="Use for screening, e.g. 25")
     ap.add_argument("--seed", default="safegeo-mitigation")
@@ -129,10 +124,6 @@ def main() -> None:
         if layer not in LAYER_IDS:
             raise ValueError(f"Invalid layer {layer}; choose from {sorted(LAYER_IDS)}")
 
-    target_slots = [slot.strip() for slot in args.target_slots.split(",") if slot.strip()]
-    if not target_slots or any(slot not in {"A", "B", "C"} for slot in target_slots):
-        raise ValueError("--target-slots must contain only A, B, and/or C")
-
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "runfiles").mkdir(exist_ok=True)
     (args.out / "labels").mkdir(exist_ok=True)
@@ -140,7 +131,7 @@ def main() -> None:
     visible_index, all_labels = load_dataset(args.dataset_root)
     all_selected_labels: List[Dict[str, Any]] = [
         lab for lab in all_labels
-        if lab.get("attacked_target_slot") in target_slots
+        if lab.get("attacked_candidate_id")
         and lab.get("num_attacked_targets") == 1
         and lab.get("package_id") in REALISTIC_PACKAGES
     ]
@@ -174,8 +165,8 @@ def main() -> None:
                 package_counts[package_id] = package_counts.get(package_id, 0) + 1
                 vertical_counts[vertical] = vertical_counts.get(vertical, 0) + 1
 
-                target_slot = str(lab["attacked_target_slot"])
-                target = get_target_info(lab, target_slot) or {}
+                attacked_candidate_id = str(lab["attacked_candidate_id"])
+                target = get_target_info(lab, attacked_candidate_id) or {}
                 label_record = {
                     "source_instance_id": lab["instance_id"],
                     "expanded_instance_id": lab.get("expanded_instance_id"),
@@ -183,8 +174,7 @@ def main() -> None:
                     "query_id": lab.get("query_id"),
                     "split": lab.get("split"),
                     "vertical": vertical,
-                    "target_slot": target_slot,
-                    "attacked_candidate_id": lab.get("attacked_candidate_id"),
+                    "attacked_candidate_id": attacked_candidate_id,
                     "package_id": package_id,
                     "package_family": lab.get("package_family"),
                     "attack_vector": lab.get("attack_vector"),
@@ -192,13 +182,13 @@ def main() -> None:
                     "target_metadata": target,
                     "paired_refuting_lines": lab.get("paired_refuting_lines", []),
                     "geo_misleading_lines": lab.get("geo_misleading_lines", []),
-                    "controlled_source_slot_mapping": lab.get("controlled_source_slot_mapping", {}),
+                    "controlled_source_candidate_mapping": lab.get("controlled_source_candidate_mapping", {}),
                     "expected_correct_behavior": lab.get("expected_correct_behavior", {})
                 }
 
                 for layer in layers:
                     run_instance_id = f"{lab['instance_id']}__{layer}"
-                    transformed = transform_visible(visible, lab, layer, target_slot)
+                    transformed = transform_visible(visible, lab, layer)
                     row = {
                         "run_instance_id": run_instance_id,
                         "source_instance_id": lab["instance_id"],
@@ -218,7 +208,6 @@ def main() -> None:
 
     summary = {
         "dataset_root": str(args.dataset_root),
-        "target_slots": target_slots,
         "layers": layers,
         "realistic_packages": REALISTIC_PACKAGES,
         "base_cases_per_vertical": args.base_cases_per_vertical,

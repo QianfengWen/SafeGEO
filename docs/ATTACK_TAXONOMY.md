@@ -111,7 +111,7 @@ focus of the mitigation study.
 
 ## Controlled Seller-Source Template
 
-For each target slot and package, SafeGEO materializes one seller-controlled document with a
+For each sampled target and package, SafeGEO materializes one seller-controlled document with a
 fixed shape: a title, URL-like string, source type, and two opened chunks of five primary
 lines each. Keeping line count and line roles fixed reduces formatting and length confounds
 across attack packages. Visible source packets may add neutral long-form filler lines after
@@ -131,16 +131,13 @@ the ten controlled lines; those filler lines do not carry attack primitives.
 | line 9 format note | Uses ordinary product-note formatting. | A, R, S |
 | line 10 correct-use reminder | Says final recommendation requires checking stronger evidence. | - |
 
-## Target Slots
+## Target sampling
 
-For each base case, three eligible non-ground-truth candidates are fixed as nominal slots A, B,
-and C. No primary or acceptable ground-truth candidate is attacked. The slots are identifiers,
-not ordered or categorical difficulty labels: all three use the same attack generation, scoring,
-and reporting rules. Candidate-specific constraint and evidence properties remain available in
-the hidden reference annotations, but are not inferred from the slot letter. A package is applied
-to one slot at a time, so the same package is evaluated against all three targets, and in every
-instance only that target's source is rewritten while the others stay truthful. The mitigation
-study also evaluates all three slots.
+For each base case, we randomly sample three eligible non-ground-truth candidates without
+replacement using a fixed release seed. The eligible pool contains lower-utility candidates
+outside the primary and acceptable benchmark-reference set. Each package is applied to all three
+sampled targets, one at a time. The attacked target source receives the controlled rewrite while
+the other two target sources remain truthful. The mitigation study uses the same three targets.
 
 ## Summary of Counts
 
@@ -148,7 +145,7 @@ study also evaluates all three slots.
 - 3 manipulation loci (content, epistemic, model-facing).
 - 22 attack packages: 7 atomic, 3 block, 4 cross-block, and 8 realistic packages.
 - 2 controls (`original_no_geo_control`, `all_truthful_target_control`).
-- 3 target slots (A, B, C).
+- 3 sampled targets per base case.
 
-Per base case: 22 packages times 3 slots, plus 2 controls, equals 68 expanded instances.
+Per base case: 22 packages times 3 targets, plus 2 controls, equals 68 expanded instances.
 Across 600 base cases this gives 40,800 instances.

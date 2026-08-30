@@ -61,7 +61,7 @@ def test_benchmark_and_mitigation_share_user_serialization():
 def test_layers_do_not_mutate_visible_packet():
     row = read_records("sample/visible")[0]
     for layer in LAYER_NAMES:
-        transformed = BUILD.transform_visible(row, {}, layer, "A")
+        transformed = BUILD.transform_visible(row, {}, layer)
         assert transformed == row
         assert transformed is not row
         assert transformed["search_results"] is not row["search_results"]

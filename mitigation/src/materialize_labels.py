@@ -53,7 +53,7 @@ def main() -> None:
             row["source_instance_id"] = source_id
             row["mitigation_layer_id"] = layer_id
             row["mitigation_layer_name"] = LAYER_NAMES.get(layer_id, manifest.get("layer_name"))
-            row["mitigation_target_slot"] = manifest.get("target_slot")
+            row["mitigation_target_candidate_id"] = manifest.get("attacked_candidate_id")
             out.write(json.dumps(row, ensure_ascii=False) + "\n")
             n += 1
     print(json.dumps({"out": str(args.out), "n": n}, indent=2))

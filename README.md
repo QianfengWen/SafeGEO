@@ -30,7 +30,7 @@ Paper: <https://arxiv.org/abs/2606.28356> &nbsp;·&nbsp; Project page: <https://
 
 This release contains:
 
-- A GEO robustness benchmark with 22 attack variants and 2 controls (unmodified and truthful rewrite), over 600 cases and 3 target slots (40,800 instances).
+- A GEO robustness benchmark with 22 attack variants and 2 controls (unmodified and truthful rewrite), over 600 cases and 3 sampled targets per case (40,800 instances).
 - A structured attack library of 7 manipulation primitives across 3 loci, from single moves to coherent realistic GEO packages.
 - A Hugging Face dataset with 10 full-benchmark Parquet configs plus 10 matching Diamond configs, including hidden benchmark-reference labels and line-level evidence annotations.
 - A matched mitigation study with the exact benchmark request as the no-mitigation baseline and five prompt/input-level interventions.
@@ -118,7 +118,7 @@ pip install datasets
 
 ## Dataset
 
-SafeGEO contains 600 base cases across 6 product verticals, 100 each: AI meeting transcription, baby monitors, carry-on backpacks, home air purifiers, noise-canceling headphones, and office chairs. Each case expands into 68 instances (22 attacks times 3 target slots, plus 2 controls), for 40,800 instances. The `visible` config holds model-facing inputs and `labels` holds the hidden benchmark reference. Every visible `user_query` is byte-identical to its identifier-sanitized construction query; the structured decomposition remains hidden.
+SafeGEO contains 600 base cases across 6 product verticals, 100 each: AI meeting transcription, baby monitors, carry-on backpacks, home air purifiers, noise-canceling headphones, and office chairs. Each case expands into 68 instances (22 attacks times 3 sampled targets, plus 2 controls), for 40,800 instances. The `visible` config holds model-facing inputs and `labels` holds the hidden benchmark reference. Every visible `user_query` matches its construction query. Product and vendor names in the candidate roster and source packet use synthetic replacements.
 
 ```python
 from datasets import load_dataset
@@ -134,8 +134,8 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden benc
 | `candidate_quality` | 11,974 | Per-candidate quality judgments for utility and ranking metrics. |
 | `source_annotations` | 21,513 | Per-source annotations for citation-validity scoring. |
 | `geo_line_annotations` | 414,000 | Line-level misleading and refuting annotations within controlled sources. |
-| `targets` | 600 | Fixed A/B/C target assignment per base case. |
-| `instances_manifest` | 40,800 | Maps each expanded instance to its base case, package, and slot. |
+| `targets` | 600 | Three sampled target candidates per base case. |
+| `instances_manifest` | 40,800 | Maps each expanded instance to its base case, package, and attacked candidate. |
 | `quality_distributions` | 600 | Per-query candidate quality distribution. |
 | `requirement_annotations` | 600 | Per-query requirement annotations. |
 | `controlled_documents` | 41,400 | Full controlled-source corpus, with hidden attack metadata that is not model-visible. |
@@ -187,11 +187,11 @@ OPENROUTER_API_KEY=...   PROVIDER=openrouter MODEL=openai/gpt-4o-mini bash scrip
 
 See [`benchmark/README.md`](benchmark/README.md) and [`mitigation/README.md`](mitigation/README.md) for the stage-by-stage pipelines and full options.
 
-For fast screening, run the same benchmark commands against [`diamond/`](diamond/) instead of `data/`. Diamond contains 600 instances from 120 vertical-balanced cases, with one nominal target per case balanced across A/B/C. Its three attacks were selected for high attack effect, so use the complete benchmark for population-level reporting.
+For fast screening, run the same benchmark commands against [`diamond/`](diamond/) instead of `data/`. Diamond contains 600 instances from 120 vertical-balanced cases, with one sampled target per case. Its three attacks were selected for high attack effect, so use the complete benchmark for population-level reporting.
 
 ## Attack taxonomy
 
-SafeGEO models GEO as an adversary that rewrites seller-controlled sources along 3 manipulation loci, built from 7 primitives, composed into 22 attack variants and probed against 2 controls over 3 target slots.
+SafeGEO models GEO as an adversary that rewrites seller-controlled sources along 3 manipulation loci, built from 7 primitives, composed into 22 attack variants and probed against 2 controls over 3 sampled targets.
 
 | Code | Primitive | Manipulation locus |
 |:--:|---|---|
@@ -203,11 +203,11 @@ SafeGEO models GEO as an adversary that rewrites seller-controlled sources along
 | `S` | salience manipulation | model-facing |
 | `M` | model-directed instruction | model-facing |
 
-Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic packages. These packages use coherent synthetic seller-source templates; the name describes the benchmark family, not measured live-web prevalence. Each base case has three fixed, eligible non-ground-truth targets recorded as nominal slots A/B/C. The slots are evaluated symmetrically and do not encode difficulty. Each target is crossed with every package, and an instance rewrites only that target's own source while the others stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
+Packages grow in composition across four families: 7 atomic (one primitive), 3 block (one full locus), 4 cross-block (multiple loci), and 8 realistic packages. These packages use coherent synthetic seller-source templates; the name describes the benchmark family, not measured live-web prevalence. For each base case, a fixed release seed samples three eligible non-ground-truth targets without replacement. Each target is crossed with every package, and an instance rewrites only that target's own source while the other two stay truthful. Full definitions are in [`docs/ATTACK_TAXONOMY.md`](docs/ATTACK_TAXONOMY.md).
 
 ## Mitigation study
 
-Given that GEO attacks work, what can a system developer do without changing the model? The study compares six matched conditions on the same attacked instances (all three target slots, the 8 realistic packages, 14,400 instances per layer) and reports changes against the unmitigated baseline.
+Given that GEO attacks work, what can a system developer do without changing the model? The study compares six matched conditions on the same attacked instances (all three sampled targets, the 8 realistic packages, 14,400 instances per layer) and reports changes against the unmitigated baseline.
 
 | Artifact ID | Strategy | What changes |
 |:--:|---|---|

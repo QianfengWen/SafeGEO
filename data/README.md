@@ -37,17 +37,15 @@ utility-aligned recommendations when seller-controlled web sources are rewritten
 Generative Engine Optimization (GEO) attacks. Candidate generation, retrieval, and source
 selection are fixed. It is built from 600 recommendation base cases spread evenly
 across 6 product verticals (100 cases each). Each base case is expanded into 68 instances:
-22 attack packages applied to each of 3 target slots (A, B, C), plus 2 controls. This yields
+22 attack packages applied to each of 3 sampled targets, plus 2 controls. This yields
 40,800 instances in total. The attack library spans 3 manipulation loci (content, epistemic,
 and model-facing) drawn from 7 primitives; see the
 [attack taxonomy](../docs/ATTACK_TAXONOMY.md) for the full breakdown.
 
-The three target slots are nominal identifiers evaluated under the same protocol; A/B/C do not
-encode difficulty. Candidate-specific quality and evidence annotations remain available for
-scoring and analysis without turning the slot letters into difficulty categories.
-Nested target records therefore use the shared role `nominal_fixed_target` and do not expose a
-target-difficulty field. Run `python scripts/normalize_target_metadata.py --check` to verify this
-release invariant.
+For each base case, a fixed release seed samples three eligible non-ground-truth candidates
+without replacement. Candidate IDs identify the sampled targets throughout the release.
+Candidate-specific quality and evidence annotations remain available for scoring and analysis.
+Run `python scripts/normalize_target_metadata.py --check` to verify the target schema.
 
 The 6 verticals are: `ai_meeting_transcription`, `baby_monitor`, `carry_on_backpack`,
 `home_air_purifier`, `noise_canceling_headphones`, and `office_chair`.
@@ -59,8 +57,9 @@ candidate-quality judgments, source and line-level annotations, the fixed per-ca
 the instance manifest, per-query quality distributions, requirement annotations, and the
 full controlled-document corpus.
 
-Base candidate and source records are derived from shopping-research traces, then canonicalized
-and de-identified. Seller-source control/GEO records are synthetic, while utility and evidence
+Base candidate and source records are derived from shopping-research traces, then canonicalized.
+Product and vendor names are replaced with synthetic names, and candidate and source records use
+synthetic IDs. Seller-source control/GEO records are synthetic, while utility and evidence
 labels are pipeline-generated benchmark references. See the
 [datasheet](../docs/DATASHEET.md) and [human audit](../docs/HUMAN_AUDIT.md).
 
@@ -101,8 +100,8 @@ records = read_records("data/visible")   # list of dicts, nested fields decoded
 | `candidate_quality` | 11,974 | Per-candidate benchmark-reference judgments used to compute utility and ranking metrics. |
 | `source_annotations` | 21,513 | Per-source annotations supporting citation validity scoring. |
 | `geo_line_annotations` | 414,000 | Line-level annotations marking misleading and refuting lines within controlled sources. |
-| `targets` | 600 | The fixed A/B/C target assignment for each base case. |
-| `instances_manifest` | 40,800 | Manifest mapping every expanded instance to its base case, package, and target slot. |
+| `targets` | 600 | The three sampled target candidates for each base case. |
+| `instances_manifest` | 40,800 | Manifest mapping every expanded instance to its base case, package, and attacked candidate. |
 | `quality_distributions` | 600 | Per-query candidate quality distribution (ground-truth, hard-negative, medium-negative counts). |
 | `requirement_annotations` | 600 | Per-query requirement annotations describing the constraints a good recommendation must satisfy. |
 | `controlled_documents` | 41,400 | Full controlled-source corpus, including hidden attack metadata (see note below). |
@@ -119,8 +118,8 @@ These are the only fields a model sees at inference time.
 | `split` | string | Data split tag. |
 | `vertical` | string | Product vertical (one of the 6 listed above). |
 | `version` | string | Visible-format version tag (semantics-preserved query, long sources). |
-| `user_query` | string | Identifier-sanitized construction request, byte-identical across all expanded rows for a case. |
-| `candidate_roster` | list | The candidate products to rank, each with a `candidate_id`, name, and visible attributes. |
+| `user_query` | string | Construction request, byte-identical across all expanded rows for a case. |
+| `candidate_roster` | list | Candidate products with synthetic product/vendor names, a `candidate_id`, and visible attributes. |
 | `search_results` | list | The source documents the agent may read, including controlled (potentially attacked) sources. |
 | `generation_instruction` | dict | The task framing given to the model (recommend from the roster using only the provided sources). |
 
@@ -147,8 +146,9 @@ These fields are hidden benchmark-reference annotations and are used only for sc
 | `version` | string | Dataset-format version tag. |
 | `visible_format` | string | Visible-rendering format tag. |
 | `source_only_doc_id_map` | dict | Mapping from visible neutral doc ids to canonical source ids. |
-| `controlled_source_slot_mapping` | dict | Mapping from target slots to the controlled documents that fill them. |
-| `fixed_geo_targets` | list | The fixed A/B/C target assignment for the base case. |
+| `controlled_source_candidate_mapping` | dict | Mapping from sampled candidate IDs to their controlled documents. |
+| `fixed_geo_targets` | list | The three sampled target records for the base case. |
+| `attacked_candidate_id` | string | Candidate ID of the attacked target; empty for controls. |
 | `paired_refuting_lines` | list | Lines in the corpus that refute attacked claims (used for evidence-recall scoring). |
 | `geo_misleading_lines` | list | Lines introduced by the attack that are misleading (used for citation scoring). |
 | `controlled_source_line_annotations` | list | Line-level annotations for the controlled sources in this instance. |

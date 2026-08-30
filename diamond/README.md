@@ -1,15 +1,15 @@
 # SafeGEO Diamond
 
 SafeGEO Diamond is a fast, vertical-balanced screening split with 600 expanded instances: 120
-base cases (20 per product vertical), one nominal target per case balanced across A/B/C (40 cases
-per slot), the three highest-Target@3 realistic packages on DeepSeek-V4-Flash, and both controls
-(the unmodified source and the truthful target-source rewrite). A/B/C are identifiers, not
-difficulty levels.
+base cases (20 per product vertical), one sampled target per case, the three highest-Target@3
+realistic packages on DeepSeek-V4-Flash, and both controls (the unmodified source and the
+truthful target-source rewrite).
 
 The selected attacks are `selective_comparison_note`, `false_fit_checklist`, and
 `citation_padded_note`. Base cases are selected independently of model outcomes by a fixed,
-vertical-stratified hash. Selected cases receive A/B/C by a deterministic round-robin assignment.
-The exact IDs, assignments, and row counts are recorded in `selection_manifest.json`.
+vertical-stratified hash. A second fixed-seed selection chooses one of each case's three sampled
+targets. The exact case IDs, candidate IDs, and row counts are recorded in
+`selection_manifest.json`.
 
 Diamond is 68 times smaller than the 40,800-instance diagnostic benchmark and 26 times smaller
 than the 15,600-instance realistic-package evaluation. It supports rapid robustness screening and model
