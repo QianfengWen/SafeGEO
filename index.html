@@ -4,25 +4,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SafeGEO: Understanding GEO Risks in Recommendation Agents</title>
-  <meta name="description" content="SafeGEO is a benchmark for testing whether LLM recommendation agents preserve utility-aligned recommendations under Generative Engine Optimization (GEO) attacks.">
+  <meta name="description" content="SafeGEO, accepted to the EMNLP 2026 main conference, tests whether LLM recommendation agents preserve utility-aligned recommendations under Generative Engine Optimization (GEO) attacks.">
   <link rel="icon" type="image/svg+xml" href="static/favicon.svg">
+  <link rel="canonical" href="https://qianfengwen.github.io/SafeGEO/">
 
   <!-- Open Graph / Twitter -->
   <meta property="og:title" content="SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents">
-  <meta property="og:description" content="A benchmark for GEO attacks on LLM recommendation agents: 22 attack variants across 600 cases (40,800 instances), plus an agent-side mitigation study.">
+  <meta property="og:description" content="EMNLP 2026 main conference. A benchmark for GEO attacks on recommendation agents: 22 attack variants across 600 cases (40,800 instances), plus an agent-side mitigation study.">
   <meta property="og:image" content="https://qianfengwen.github.io/SafeGEO/static/images/construction.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://qianfengwen.github.io/SafeGEO/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SafeGEO: Understanding GEO Risks in Recommendation Agents">
+  <meta name="twitter:description" content="EMNLP 2026 main conference. SafeGEO measures GEO attack harm and developer-side mitigation in recommendation agents.">
   <meta name="twitter:image" content="https://qianfengwen.github.io/SafeGEO/static/images/construction.png">
+
+  <!-- Scholarly metadata -->
+  <meta name="citation_title" content="SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents">
+  <meta name="citation_author" content="Qianfeng Wen">
+  <meta name="citation_author" content="Yifan Simon Liu">
+  <meta name="citation_author" content="Xin Liu">
+  <meta name="citation_author" content="Difan Jiao">
+  <meta name="citation_author" content="Blair Yang">
+  <meta name="citation_author" content="Junda Wu">
+  <meta name="citation_author" content="Zhenwei Tang">
+  <meta name="citation_conference_title" content="2026 Conference on Empirical Methods in Natural Language Processing">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_pdf_url" content="https://qianfengwen.github.io/SafeGEO/static/SafeGEO.pdf">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
   <link rel="stylesheet" href="static/css/index.css">
 </head>
 <body>
@@ -31,7 +45,7 @@
   <section class="hero head">
     <div class="hero-body">
       <div class="container is-max-desktop has-text-centered">
-        <span class="tag is-rounded venue-tag">arXiv preprint, 2026</span>
+        <span class="tag is-rounded venue-tag">EMNLP 2026 · Main Conference</span>
         <h1 class="title paper-title">SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents</h1>
 
         <div class="authors">
@@ -55,11 +69,11 @@
         <p class="equal-contrib"><sup>*</sup>Equal contribution</p>
 
         <div class="link-buttons">
-          <a class="link-button" href="https://arxiv.org/abs/2606.28356" target="_blank" rel="noopener">
-            <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
-          </a>
           <a class="link-button" href="static/SafeGEO.pdf" target="_blank" rel="noopener">
-            <span class="icon"><i class="fas fa-file-arrow-down"></i></span><span>PDF</span>
+            <span class="icon"><i class="fas fa-file-arrow-down"></i></span><span>Camera-ready PDF</span>
+          </a>
+          <a class="link-button" href="https://arxiv.org/abs/2606.28356" target="_blank" rel="noopener">
+            <span class="icon"><i class="fas fa-file-lines"></i></span><span>arXiv</span>
           </a>
           <a class="link-button" href="https://github.com/QianfengWen/SafeGEO">
             <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
@@ -96,16 +110,16 @@
       <div class="content abstract has-text-justified">
         <p>
           Generative Engine Optimization (GEO) lets content owners rewrite web content to increase their visibility in
-          generative systems. In recommendation agents, this creates a risk that seller-controlled sources make flawed
-          products appear better supported than they are. We study this risk by asking whether recommendation agents
-          preserve utility-aligned decisions when seller-controlled sources are rewritten for GEO. To make this question
-          measurable, we construct <strong>SafeGEO</strong>, an evaluation suite with 22 GEO attack variants across 600
-          recommendation cases. We empirically show that GEO attacks can promote flawed target products. On average, they
-          increase the rate at which such flawed products enter the recommendation set by up to <strong>83.2%</strong>.
-          We further study whether agent-side design choices can mitigate this risk and show that simple defenses,
-          including defensive prompting and structured evidence checks, reduce harmful target promotion by up to
-          <strong>39.2%</strong>. These gains are substantial but do not restore the no-GEO performance, showing that GEO
-          remains a serious risk despite developer-side mitigation.
+          generative systems. In recommendation agents, this creates a risk that sources controlled by sellers make flawed
+          products appear better supported than they are. We study this risk at the generation stage by asking whether
+          recommendation agents continue to make decisions that align with user utility when these sources are rewritten
+          for GEO. To make this question measurable, we construct <strong>SafeGEO</strong>, an evaluation suite with 22 GEO
+          attack variants across 600 recommendation cases. We empirically show that GEO attacks can promote flawed target
+          products: they increase the rate at which such flawed products enter the recommendation set by up to
+          <strong>83.2 percentage points (pp)</strong>. We further study whether agent-side design choices can mitigate this
+          risk and show that simple defenses reduce harmful target promotion by up to <strong>39.2 pp</strong>. These gains
+          are substantial but do not restore the no-GEO performance, showing that GEO remains a serious risk despite
+          mitigation.
         </p>
       </div>
     </div>
@@ -120,28 +134,28 @@
           <div class="contrib-card">
             <div class="contrib-icon"><i class="fas fa-flask-vial"></i></div>
             <h3>A GEO robustness benchmark</h3>
-            <p>Tests whether an agent keeps utility-aligned recommendations when seller-controlled sources are rewritten. It uses 22 attack packages and 2 truthful controls over 600 cases and 3 target slots (40,800 instances).</p>
+            <p>Tests whether an agent keeps utility-aligned recommendations when seller-controlled sources are rewritten. It uses 22 attack variants and 2 controls over 600 cases and 3 sampled targets (40,800 instances).</p>
           </div>
         </div>
         <div class="column is-half">
           <div class="contrib-card">
             <div class="contrib-icon"><i class="fas fa-sitemap"></i></div>
             <h3>A structured attack library</h3>
-            <p>Seven atomic manipulation primitives across three loci, composed from single moves up to full-stack realistic GEO pages a plausible operator might deploy.</p>
+            <p>Seven atomic manipulation primitives across three loci, composed from single moves to coherent realistic benchmark templates.</p>
           </div>
         </div>
         <div class="column is-half">
           <div class="contrib-card">
             <div class="contrib-icon"><i class="fas fa-database"></i></div>
             <h3>A released dataset</h3>
-            <p>Ten Hugging Face Parquet configs with model-facing inputs, hidden ground-truth labels, and line-level evidence annotations. It loads with one call and runs offline.</p>
+            <p>Ten full-benchmark Hugging Face configs plus ten matching SafeGEO Diamond configs, with model-facing inputs, hidden benchmark-reference labels, and line-level evidence annotations.</p>
           </div>
         </div>
         <div class="column is-half">
           <div class="contrib-card">
             <div class="contrib-icon"><i class="fas fa-shield-halved"></i></div>
             <h3>An agent-side mitigation study</h3>
-            <p>Six developer-side defense layers (L0 to L5) evaluated on the realistic attacks, reporting how much each reduces harmful promotion relative to an unmitigated baseline.</p>
+            <p>The exact benchmark request plus five prompt/input-level interventions, evaluated on all three sampled targets across the eight realistic attacks.</p>
           </div>
         </div>
       </div>
@@ -167,14 +181,14 @@
         </div>
         <div class="column is-one-quarter">
           <div class="stat-card">
-            <div class="stat-number up">+83.2%</div>
-            <div class="stat-label">flawed products promoted<br>by GEO attacks</div>
+            <div class="stat-number up">+83.2 pp</div>
+            <div class="stat-label">largest increase in flawed-target<br>top-three placement</div>
           </div>
         </div>
         <div class="column is-one-quarter">
           <div class="stat-card">
-            <div class="stat-number down">−39.2%</div>
-            <div class="stat-label">harmful promotion cut<br>by developer-side defenses</div>
+            <div class="stat-number down">−39.2 pp</div>
+            <div class="stat-label">largest reduction in harmful<br>target promotion</div>
           </div>
         </div>
       </div>
@@ -206,8 +220,8 @@
       <h2 class="title section-title has-text-centered">Dataset</h2>
       <p class="lead has-text-centered">
         600 recommendation base cases across 6 product verticals, each expanded into 68 instances
-        (22 packages times 3 target slots, plus 2 controls) for <strong>40,800</strong> instances, shipped as
-        <strong>10 Parquet configs</strong> on the Hugging Face Hub.
+        (22 attack variants times 3 sampled targets, plus 2 controls) for <strong>40,800</strong> instances, shipped as
+        <strong>10 full-benchmark Parquet configs</strong> on the Hugging Face Hub.
       </p>
       <div class="vert-grid">
         <div class="vert"><i class="fa-solid fa-microphone-lines"></i><span>AI Meeting Transcription</span></div>
@@ -223,10 +237,15 @@
         <code>instances_manifest</code>, <code>quality_distributions</code>, <code>requirement_annotations</code>,
         <code>controlled_documents</code>.
       </p>
+      <p class="lead has-text-centered">
+        <strong>SafeGEO Diamond</strong> mirrors all ten configs in a 600-instance, vertical-balanced screening split
+        for inexpensive model iteration. It is a high-effect stress set; use the complete benchmark for population-level reporting.
+      </p>
       <pre class="code-block">from datasets import load_dataset
 
 visible = load_dataset("wieeii/SafeGEO", "visible", split="test")  # model-facing inputs
-labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden ground truth</pre>
+labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden benchmark reference
+diamond = load_dataset("wieeii/SafeGEO", "diamond_visible", split="test")</pre>
       <p class="has-text-centered">
         <a class="doc-link" href="https://huggingface.co/datasets/wieeii/SafeGEO">Browse the dataset on Hugging Face</a>
       </p>
@@ -239,8 +258,8 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
       <h2 class="title section-title has-text-centered">Attack taxonomy</h2>
       <p class="lead has-text-centered">
         SafeGEO models GEO as an adversary that rewrites seller-controlled sources along <strong>three loci</strong>,
-        built from <strong>seven primitives</strong>, composed into <strong>22 packages</strong> and probed against
-        <strong>two truthful controls</strong> over <strong>three target slots</strong>.
+        built from <strong>seven primitives</strong>, composed into <strong>22 attack variants</strong> and probed against
+        <strong>two controls</strong> over <strong>three sampled targets</strong>.
       </p>
       <div class="columns is-multiline loci-row">
         <div class="column is-one-third">
@@ -282,13 +301,13 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
         <div class="column"><div class="family-card"><div class="family-n">7</div><div>atomic<br><span>single primitive</span></div></div></div>
         <div class="column"><div class="family-card"><div class="family-n">3</div><div>block<br><span>one full locus</span></div></div></div>
         <div class="column"><div class="family-card"><div class="family-n">4</div><div>cross-block<br><span>multiple loci</span></div></div></div>
-        <div class="column"><div class="family-card"><div class="family-n">8</div><div>realistic<br><span>deployable pages</span></div></div></div>
+        <div class="column"><div class="family-card"><div class="family-n">8</div><div>realistic<br><span>coherent templates</span></div></div></div>
       </div>
       <p class="taxonomy-foot has-text-centered">
-        For each base case, three candidate items are randomly sampled from the roster as GEO targets (slots
-        <strong>A</strong>, <strong>B</strong>, <strong>C</strong>); each instance rewrites only that target's own source. The mitigation study uses slot A.
+        For each base case, three eligible non-ground-truth candidates are sampled without replacement as GEO targets;
+        each instance rewrites only that target's own source.
         <br>
-        <a class="doc-link" href="https://github.com/QianfengWen/SafeGEO/blob/main/docs/ATTACK_TAXONOMY.md">Full taxonomy: all 22 packages, controls, and the source template</a>
+        <a class="doc-link" href="https://github.com/QianfengWen/SafeGEO/blob/main/docs/ATTACK_TAXONOMY.md">Full taxonomy: all 22 attack variants, controls, and source templates</a>
       </p>
     </div>
   </section>
@@ -298,17 +317,17 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
     <div class="container is-max-desktop">
       <h2 class="title section-title has-text-centered">Agent-side mitigation study</h2>
       <p class="lead has-text-centered">
-        Given that GEO attacks work, what can a developer do <em>without changing the model</em>? Six design layers are
-        compared on the same attacked instances (Target&nbsp;A, the 8 realistic packages), each measured by how much it
-        reduces attack success against the unmitigated baseline.
+        Given that GEO attacks work, what can a developer do <em>without changing the model</em>? Six matched conditions
+        are compared on the same attacked instances (all three sampled targets and the 8 realistic variants; 14,400
+        instances per condition), each measured against the exact no-mitigation benchmark request.
       </p>
       <div class="layer-list">
-        <div class="layer"><span class="layer-tag">L0</span><span class="layer-name">Source-only baseline</span><span class="layer-desc">No mitigation, the reference point.</span></div>
-        <div class="layer"><span class="layer-tag">L1</span><span class="layer-name">Prompt mitigation</span><span class="layer-desc">A defensive final instruction is added; nothing else changes.</span></div>
-        <div class="layer"><span class="layer-tag">L2</span><span class="layer-name">Rationale elicitation</span><span class="layer-desc">Top recommendations must carry reasons and citations.</span></div>
-        <div class="layer"><span class="layer-tag">L3</span><span class="layer-name">Audited evidence sheet</span><span class="layer-desc">A lightweight upstream evidence-verification artifact is added.</span></div>
-        <div class="layer"><span class="layer-tag">L4</span><span class="layer-name">Context balancing</span><span class="layer-desc">Source context is reordered to reduce single-source GEO salience.</span></div>
-        <div class="layer"><span class="layer-tag">L5</span><span class="layer-name">Instruction filtering</span><span class="layer-desc">Source-internal instructions aimed at the assistant are removed.</span></div>
+        <div class="layer"><span class="layer-tag">L0</span><span class="layer-name">No mitigation</span><span class="layer-desc">The exact original benchmark system prompt, serialization, source packet, and output contract.</span></div>
+        <div class="layer"><span class="layer-tag">L1</span><span class="layer-name">Defensive prompt</span><span class="layer-desc">A defensive system instruction is added; nothing else changes.</span></div>
+        <div class="layer"><span class="layer-tag">L2</span><span class="layer-name">Rationale elicitation</span><span class="layer-desc">The output instruction for the existing rationale and citation fields is tightened.</span></div>
+        <div class="layer"><span class="layer-tag">L3</span><span class="layer-name">Evidence breakdown</span><span class="layer-desc">The same model generates candidate-level evidence checks before ranking; no external sheet is supplied.</span></div>
+        <div class="layer"><span class="layer-tag">L4</span><span class="layer-name">Context balancing</span><span class="layer-desc">An instruction asks the model to balance evidence across the unchanged source packet.</span></div>
+        <div class="layer"><span class="layer-tag">L5</span><span class="layer-name">Instruction filtering</span><span class="layer-desc">An instruction asks the model to ignore source-internal directives; no source line is removed.</span></div>
       </div>
     </div>
   </section>
@@ -387,7 +406,7 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
           </tbody>
         </table>
       </div>
-      <p class="results-note">The <b>L3 audited evidence breakdown</b> is the strongest defense, reaching a 39.2 point Target@3 reduction, but no layer restores no-GEO performance.</p>
+      <p class="results-note">The <b>L3 candidate-level evidence breakdown</b> is the strongest defense, reaching a 39.2 point Target@3 reduction, but no condition restores no-GEO performance.</p>
 
       <figure class="figure results-fig">
         <img src="static/images/results_mechanism_scatter.png" alt="Misleading-citation rate predicts attacked-target placement">
@@ -411,8 +430,8 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
     <div class="container is-max-desktop has-text-centered">
       <h2 class="title section-title">Resources</h2>
       <div class="link-buttons">
-        <a class="link-button" href="https://arxiv.org/abs/2606.28356" target="_blank" rel="noopener"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span></a>
-        <a class="link-button" href="static/SafeGEO.pdf" target="_blank" rel="noopener"><span class="icon"><i class="fas fa-file-arrow-down"></i></span><span>PDF</span></a>
+        <a class="link-button" href="static/SafeGEO.pdf" target="_blank" rel="noopener"><span class="icon"><i class="fas fa-file-arrow-down"></i></span><span>Camera-ready PDF</span></a>
+        <a class="link-button" href="https://arxiv.org/abs/2606.28356" target="_blank" rel="noopener"><span class="icon"><i class="fas fa-file-lines"></i></span><span>arXiv</span></a>
         <a class="link-button" href="https://github.com/QianfengWen/SafeGEO"><span class="icon"><i class="fab fa-github"></i></span><span>Code</span></a>
         <a class="link-button" href="https://huggingface.co/datasets/wieeii/SafeGEO"><span class="icon"><i class="fas fa-database"></i></span><span>Dataset</span></a>
         <a class="link-button" href="https://github.com/QianfengWen/SafeGEO/blob/main/docs/ATTACK_TAXONOMY.md"><span class="icon"><i class="fas fa-sitemap"></i></span><span>Taxonomy</span></a>
@@ -427,10 +446,10 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
       <h2 class="title section-title has-text-centered">BibTeX</h2>
       <div class="bibtex-wrap">
         <button class="copy-btn" onclick="copyBibtex()"><span class="icon"><i class="fas fa-copy"></i></span><span id="copy-label">Copy</span></button>
-        <pre id="bibtex-block">@article{wen2026safegeo,
+        <pre id="bibtex-block">@inproceedings{wen-etal-2026-safegeo,
   title   = {SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents},
   author  = {Wen, Qianfeng and Liu, Yifan Simon and Liu, Xin and Jiao, Difan and Yang, Blair and Wu, Junda and Tang, Zhenwei},
-  journal = {arXiv preprint arXiv:2606.28356},
+  booktitle = {Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing},
   year    = {2026}
 }</pre>
       </div>
@@ -441,10 +460,10 @@ labels  = load_dataset("wieeii/SafeGEO", "labels",  split="test")  # hidden grou
   <footer class="footer">
     <div class="container has-text-centered">
       <p class="footer-links">
-        <a href="https://arxiv.org/abs/2606.28356">Paper</a> &nbsp;·&nbsp;
+        <a href="static/SafeGEO.pdf" target="_blank" rel="noopener">Camera-ready PDF</a> &nbsp;·&nbsp;
+        <a href="https://arxiv.org/abs/2606.28356">arXiv</a> &nbsp;·&nbsp;
         <a href="https://github.com/QianfengWen/SafeGEO">Code</a> &nbsp;·&nbsp;
-        <a href="https://huggingface.co/datasets/wieeii/SafeGEO">Dataset</a> &nbsp;·&nbsp;
-        <a href="static/SafeGEO.pdf" target="_blank" rel="noopener">PDF</a>
+        <a href="https://huggingface.co/datasets/wieeii/SafeGEO">Dataset</a>
       </p>
       <p class="footer-note">
         Code released under Apache-2.0; the dataset under CC BY 4.0.
