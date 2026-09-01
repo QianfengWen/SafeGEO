@@ -9,6 +9,12 @@ description = "SafeGEO: Understanding Generative Engine Optimization Risks in Re
 requires-python = ">=3.10"
 dependencies = ["pyarrow>=14", "numpy>=1.24", "openai>=1.0"]
 
+[project.urls]
+Homepage = "https://qianfengwen.github.io/SafeGEO/"
+Paper = "https://qianfengwen.github.io/SafeGEO/static/SafeGEO.pdf"
+Repository = "https://github.com/QianfengWen/SafeGEO"
+Dataset = "https://huggingface.co/datasets/wieeii/SafeGEO"
+
 [project.optional-dependencies]
 paper = ["matplotlib>=3.8"]
 

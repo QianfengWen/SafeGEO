@@ -50,7 +50,7 @@ configs:
 
 # SafeGEO Dataset
 
-Paper: <https://arxiv.org/abs/2606.28356> · Project page: <https://qianfengwen.github.io/SafeGEO/> · Code: <https://github.com/QianfengWen/SafeGEO>
+Camera-ready: <https://qianfengwen.github.io/SafeGEO/static/SafeGEO.pdf> · arXiv: <https://arxiv.org/abs/2606.28356> · Project page: <https://qianfengwen.github.io/SafeGEO/> · Code: <https://github.com/QianfengWen/SafeGEO>
 
 SafeGEO tests whether recommendation agents preserve utility-aligned decisions
 when seller-controlled web sources are rewritten with Generative Engine
@@ -131,10 +131,10 @@ separately under Apache-2.0 in the GitHub repository.
 ## Citation
 
 ```bibtex
-@article{wen2026safegeo,
+@inproceedings{wen-etal-2026-safegeo,
   title   = {SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents},
   author  = {Wen, Qianfeng and Liu, Yifan Simon and Liu, Xin and Jiao, Difan and Yang, Blair and Wu, Junda and Tang, Zhenwei},
-  journal = {arXiv preprint arXiv:2606.28356},
+  booktitle = {Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing},
   year    = {2026}
 }
 ```

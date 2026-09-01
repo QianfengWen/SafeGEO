@@ -3,6 +3,7 @@
 # SafeGEO: Understanding Generative Engine Optimization Risks in Recommendation Agents
 
 <p align="center">
+  <a href="output/pdf/SafeGEO_camera_ready.pdf"><img alt="EMNLP 2026 camera-ready PDF" src="https://img.shields.io/badge/EMNLP%202026-Camera--ready%20PDF-6f42c1?style=for-the-badge"></a>
   <a href="https://arxiv.org/abs/2606.28356"><img alt="arXiv:2606.28356" src="https://img.shields.io/badge/arXiv-2606.28356-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white"></a>
   <a href="https://qianfengwen.github.io/SafeGEO/"><img alt="Project Page" src="https://img.shields.io/badge/Project-Page-1f72b8?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
   <a href="https://huggingface.co/datasets/wieeii/SafeGEO"><img alt="Hugging Face Dataset" src="https://img.shields.io/badge/Dataset-Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black"></a>
@@ -26,7 +27,7 @@ Qianfeng Wen<sup>1,5,\*</sup>, Yifan Simon Liu<sup>2,\*</sup>, Xin Liu<sup>3,5,\
 
 SafeGEO tests whether a source-conditioned LLM reranker preserves utility-aligned recommendations when sellers rewrite web sources using Generative Engine Optimization (GEO). Retrieval, candidate generation, and source selection are fixed so the benchmark isolates the generation-stage effect. It also includes a matched prompt/input-level mitigation study.
 
-Paper: <https://arxiv.org/abs/2606.28356> &nbsp;·&nbsp; Project page: <https://qianfengwen.github.io/SafeGEO/> &nbsp;·&nbsp; Dataset: <https://huggingface.co/datasets/wieeii/SafeGEO>
+Camera-ready: [PDF](output/pdf/SafeGEO_camera_ready.pdf) &nbsp;·&nbsp; arXiv: <https://arxiv.org/abs/2606.28356> &nbsp;·&nbsp; Project page: <https://qianfengwen.github.io/SafeGEO/> &nbsp;·&nbsp; Dataset: <https://huggingface.co/datasets/wieeii/SafeGEO>
 
 This release contains:
 
@@ -38,7 +39,7 @@ This release contains:
 
 ## News
 
-- August 2026: SafeGEO accepted to the EMNLP 2026 main conference; camera-ready artifacts and SafeGEO Diamond added.
+- August 2026: SafeGEO accepted to the EMNLP 2026 main conference; the camera-ready paper, aggregate artifacts, and SafeGEO Diamond are released.
 - June 2026: arXiv preprint, benchmark, dataset, and mitigation study released.
 
 ## Contents
@@ -235,6 +236,8 @@ Citation validity, refuting-evidence recall, gap detection, and other metrics ar
 
 ## Reproducing the paper
 
+The submitted camera-ready paper is available at [`output/pdf/SafeGEO_camera_ready.pdf`](output/pdf/SafeGEO_camera_ready.pdf).
+
 The headline numbers come from full runs (`scripts/run_benchmark.sh`, `scripts/run_mitigation.sh`) with temperature 0, top-p 1, a 6,144-token output cap for the three main models, and the scorers in this repository. The vLLM paper setting uses guided JSON, a 32,768-token model context, and tensor parallelism across four GPUs. Hosted backends use their available structured-output mode. The release keeps aggregate results in [`results/`](results/) and does not include prediction traces.
 
 Validate the camera-ready data, target, mitigation, Diamond, and aggregate-table invariants with:
@@ -259,6 +262,7 @@ python scripts/audit_camera_ready_claims.py
 ├── benchmark/                 The GEO robustness benchmark (run, score, analyze).
 ├── mitigation/                Matched prompt/input-level interventions (L0 to L5).
 ├── results/                   Aggregate camera-ready tables (no model-response traces).
+├── output/pdf/                Submitted camera-ready paper.
 ├── scripts/                   Sampling, mock predictions, and end-to-end runners.
 ├── tests/                     Unit tests (I/O round-trip fidelity, mock predictions).
 └── docs/                      Attack taxonomy and datasheet.
